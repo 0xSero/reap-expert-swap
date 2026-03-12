@@ -1,90 +1,111 @@
 # reap-expert-swap
 
-Dynamic expert-floor construction and runtime swapping for sparse Mixture-of-Experts models. Experimental research code, not a polished package.
+Reduce the VRAM footprint of sparse MoE models by keeping a profiled expert floor resident and dynamically swapping in prompt-conditioned specialists at request time.
 
-The core idea: keep a profiled expert floor resident in GPU memory, dynamically swap in prompt-conditioned specialists at request time, and compare every candidate against a matched BF16 baseline. The current testbed is Qwen3.5-35B-A3B.
+This is experimental research code. The system works end to end but has not reached BF16 parity. Best live result: **86% parsed-answer agreement** against the BF16 baseline on a matched 50-prompt evaluation. Current testbed: **Qwen3.5-35B-A3B** (63.4 GiB full BF16).
 
-**Status**: the system works end to end but has not reached BF16 parity. Best live result is 86% parsed-answer agreement against the BF16 baseline on a 50-prompt matched evaluation.
+For the full narrative of what was tried, what failed, and why, read [the blog post](docs/notes/blog.md).
 
 ---
 
-## How to reproduce
+## How to reproduce from scratch
 
-### Choose hardware
+This is a step-by-step guide to running the full pipeline. Steps 0-1 need no GPU. Steps 2-6 need a GPU machine.
 
-You need enough VRAM to hold the full BF16 model weights for the baseline server and the resident floor for the dynamic server. You can run both on the same machine sequentially or on separate machines.
+### Choose hardware and model
 
-| Model | Full BF16 size | Min floor size | Min VRAM (sequential) | Min VRAM (parallel) |
-|---|---:|---:|---:|---:|
-| Qwen3.5-35B-A3B | 63.4 GiB | ~23.5 GiB | 64 GiB | 128 GiB |
+You need a GPU machine that can hold the full BF16 weights (for the baseline) or at minimum the resident floor (for the dynamic server). Run them sequentially on one machine or in parallel on two.
 
-**Where to get GPUs:**
-
-| Provider | What works | Approx cost | Notes |
+| Provider | Recommended config | Cost | Notes |
 |---|---|---|---|
-| Your own hardware | 8x RTX 3090 (192 GiB total) | one-time ~$8,000 | What this project was built on. TP8 across all cards. |
-| [RunPod](https://runpod.io) | 1x A100 80GB or 2x A6000 48GB | $1-3/hr | Cheapest cloud option. Use their vLLM template. |
-| [Lambda](https://lambdalabs.com) | 1x A100 80GB | ~$1.10/hr | On-demand, no commitment. |
-| [Vast.ai](https://vast.ai) | 1x A100 80GB or multi-GPU | $0.80-2/hr | Spot pricing, cheapest but less reliable. |
-| [Prime Intellect](https://www.primeintellect.ai) | 8xH200 | ~$13/hr | Overkill for this, but fast. Used for the static REAP compression work. |
+| Own hardware | 8x RTX 3090 (192 GiB total) | ~$8k one-time | What this was built on. TP8. |
+| [Vast.ai](https://vast.ai) | 1x A100 80GB | ~$0.80-2/hr | Cheapest cloud path. |
+| [RunPod](https://runpod.io) | 1x A100 80GB | ~$1-3/hr | Use their vLLM template. |
+| [Lambda](https://lambdalabs.com) | 1x A100 80GB | ~$1.10/hr | On-demand. |
 
-For the cheapest path: a single A100 80GB on Vast.ai or RunPod can run both servers sequentially (baseline first, then dynamic). Budget ~$2-5 for a full experiment cycle.
+This repo was built against [Qwen/Qwen3.5-35B-A3B](https://huggingface.co/Qwen/Qwen3.5-35B-A3B) (35B params, 3B active, 40 MoE layers, 256 experts/layer). Any vLLM-compatible sparse MoE model with standard gate+experts routing should work, but only Qwen3.5-35B-A3B has been tested end to end.
 
-### Choose a model
-
-This repo was developed against Qwen3.5-35B-A3B but the architecture is not model-specific. Any vLLM-compatible sparse MoE model should work with the plan builder and runtime. The key requirement is that the model uses a standard MoE architecture with per-layer expert routing (gate + experts).
-
-| Model | Parameters | MoE layers | Experts/layer | Full BF16 | Tested? |
-|---|---:|---:|---:|---:|---|
-| [Qwen/Qwen3.5-35B-A3B](https://huggingface.co/Qwen/Qwen3.5-35B-A3B) | 35B total, 3B active | 40 | 256 | 63.4 GiB | Yes, primary testbed |
-| Qwen/Qwen1.5-MoE-A2.7B-Chat | 14.3B total, 2.7B active | 24 | 60 | ~27 GiB | Used in unit tests only |
-| Other vLLM-compatible MoE models | varies | varies | varies | varies | Untested, should work in theory |
-
-To use a different model, you need to generate your own observation summaries by running the model through a calibration corpus and collecting per-layer expert activation data.
-
-### Step 0: Clone and set up
+### Step 0: Install
 
 ```bash
 git clone https://github.com/0xsero/reap-expert-swap.git
 cd reap-expert-swap
-uv sync
+uv sync            # core deps only, no GPU needed
+uv sync --extra gpu   # adds torch + vllm (do this on the GPU machine)
 ```
 
-Requires Python 3.11+ and [uv](https://docs.astral.sh/uv/). For GPU scripts, also install the GPU extras:
+Requires Python 3.11+ and [uv](https://docs.astral.sh/uv/).
 
-```bash
-uv sync --extra gpu
-```
-
-This pulls in PyTorch and vLLM. On a cloud GPU instance, vLLM and PyTorch are often pre-installed -- in that case `uv sync` alone is fine and the scripts will import from the system packages.
-
-### Step 1: Verify the install
+### Step 1: Run the tests (no GPU)
 
 ```bash
 uv run python -m pytest tests_py/ -v
 ```
 
-45 tests should pass. These cover plan building, budget math, active-set validation, gate logic, multi-turn evaluation, router activity, and the support router. No GPU needed.
+45 tests should pass. These validate plan building, budget math, gate logic, router activity, and the support router without touching a GPU.
 
-### Step 2: Build a plan
+### Step 2: Collect observation data (GPU required)
 
-Plans are JSON documents that describe which experts stay resident (the floor) and which can be swapped in (the specialist catalog), per MoE layer.
+This is the step most READMEs skip. You need **observation summaries**: JSON files that record per-layer expert activation frequencies for your model on a calibration corpus. These tell the plan builder which experts matter.
 
-You need observation summaries -- JSON files with per-layer expert activation frequencies from prior runs. If you are starting from scratch, you first need to run the model through a calibration corpus to produce these. The evaluator (`evaluate_original_vs_multiplex.py`) collects router activity data during its runs, which you can then feed into the profiler.
+There are two ways to get observation data:
 
-Build a dynamic plan from observation data:
+**Option A: Use Cerebras REAP directly.** Install the [REAP library](https://github.com/cerebras/REAP) and run its observer on your model with a calibration dataset. This produces per-layer expert frequency and REAP saliency scores. The observation summary JSON needs this shape:
+
+```json
+{
+  "model": "Qwen/Qwen3.5-35B-A3B",
+  "workflow": "my_calibration",
+  "processedSamples": 500,
+  "totalTokens": 50000,
+  "layers": {
+    "0": {
+      "reap": [0.9, 0.8, 0.7, ...],
+      "expert_frequency": [90, 80, 70, ...]
+    },
+    "1": { ... }
+  }
+}
+```
+
+Each layer has a `reap` array (saliency scores, one per expert) and an `expert_frequency` array (activation counts, one per expert). The plan builder reads these to decide which experts go in the floor.
+
+**Option B: Bootstrap from the evaluator's router activity data.** If you already have the patched vLLM server running (Step 3) with any initial plan (even a naive one), the evaluator records per-request router activity during evaluation. You can then profile that activity:
+
+```bash
+# Run an eval with any initial plan (even a bad one)
+uv run python scripts/evaluate_original_vs_multiplex.py \
+  --dynamic-url http://localhost:8011/v1 \
+  --plan initial-plan.json \
+  --sample-count 50 --seed 7 \
+  --output-dir results/bootstrap/
+
+# Profile the router activity from that run
+uv run python scripts/profile_router_activity.py \
+  --dynamic-payload results/bootstrap/dynamic.json \
+  --plan initial-plan.json \
+  --output results/bootstrap/router-profile.json
+```
+
+The router profile records which experts the router wanted per layer, which were active vs inactive, and the mass distribution. Feed this into the floor builder to produce a better plan.
+
+**Calibration dataset matters.** From the static compression work: 1,360 high-quality domain-relevant samples beat 10,000 generic ones. Your calibration corpus should activate all experts, highlight what you want to retain, and use dense context.
+
+### Step 3: Build a plan (no GPU needed after observation)
+
+Build a dynamic plan from observation summaries:
 
 ```bash
 uv run python scripts/build_partitioned_reap_plan.py \
   --mode dynamic \
-  --observation-summary path/to/observer-summary.json \
+  --observation-summary observer-summary.json \
   --signal-key reap \
   --max-resident-ratio 0.37 \
   --output-json plan.json \
   --output-md plan.md
 ```
 
-Or refine an existing plan into a profiled floor using router activity profiles:
+Or refine an existing plan into a profiled floor using router activity profiles from Step 2B:
 
 ```bash
 uv run python scripts/build_profiled_floor_plan.py \
@@ -95,13 +116,12 @@ uv run python scripts/build_profiled_floor_plan.py \
   --output floor-plan.json
 ```
 
-### Step 3: Start the patched vLLM server
+The plan is a JSON document. Per MoE layer it specifies **coreExperts** (always resident), a **sliceCatalog** (swappable specialist groups), and a **budget** (VRAM constraints).
 
-The multiplex server monkey-patches vLLM at import time. It adds expert swap endpoints and router mask hooks to the standard vLLM OpenAI-compatible server.
+### Step 4: Start the patched vLLM server (GPU required)
 
 ```bash
 REAP_PLAN_FILE=plan.json \
-REAP_MAX_LOADED_CARTRIDGES=4 \
 REAP_ENABLE_ROUTER_MASKS=1 \
 uv run python scripts/vllm_multiplex_server.py \
   --model /path/to/Qwen3.5-35B-A3B \
@@ -109,9 +129,9 @@ uv run python scripts/vllm_multiplex_server.py \
   --port 8011
 ```
 
-Adjust `--tensor-parallel-size` to match your GPU count (1 for a single A100, 8 for 8x3090, etc). The server validates the plan on startup and will refuse to start if the plan is malformed.
+This monkey-patches vLLM at import time to add `/swap_active_set`, `/swap_cartridge/{id}`, and `/router_misses/{id}` endpoints. It validates the plan on startup. Adjust `--tensor-parallel-size` to match your GPU count.
 
-You also need a baseline server running the same model without any patching, on a different port:
+For the baseline, run stock vLLM on a different port (or run sequentially on the same port):
 
 ```bash
 uv run python -m vllm.entrypoints.openai.api_server \
@@ -120,23 +140,20 @@ uv run python -m vllm.entrypoints.openai.api_server \
   --port 8090
 ```
 
-If you only have one machine, run baseline first, collect results, shut it down, then start the dynamic server. The evaluator supports `--baseline-json` to load pre-collected baseline results.
-
-### Step 4: Run matched evaluation
+### Step 5: Run matched evaluation (GPU required)
 
 ```bash
 uv run python scripts/evaluate_original_vs_multiplex.py \
   --baseline-url http://localhost:8090/v1 \
   --dynamic-url http://localhost:8011/v1 \
   --plan plan.json \
-  --sample-count 50 \
-  --seed 7 \
+  --sample-count 50 --seed 7 \
   --output-dir results/my-experiment/
 ```
 
-This produces `baseline.json`, `dynamic.json`, and `gate.json` in the output directory. The gate verdict tells you whether the run passed or failed the quality thresholds.
+Produces `baseline.json`, `dynamic.json`, `gate.json`. Everything runs at temperature 0, same prompts, same seed. The gate automatically checks accuracy, coherence, parse error, and swap latency against thresholds.
 
-### Step 5: Profile and iterate
+### Step 6: Profile, improve, repeat
 
 ```bash
 uv run python scripts/profile_router_activity.py \
@@ -145,158 +162,86 @@ uv run python scripts/profile_router_activity.py \
   --output results/my-experiment/router-profile.json
 ```
 
-The profile shows per-layer inactive mass and which experts the router wanted but were not resident. Feed this back into the floor builder (Step 2) to improve the next plan.
+The profile tells you where the floor is missing important experts. Feed it back into the floor builder (Step 3) and iterate.
 
 ```mermaid
 flowchart LR
-    Plan["Build plan"] --> Server["Start server"]
-    Server --> Eval["Run matched eval"]
+    Obs["Collect observations\n(Step 2)"] --> Plan["Build plan\n(Step 3)"]
+    Plan --> Server["Start server\n(Step 4)"]
+    Server --> Eval["Matched eval\n(Step 5)"]
     Eval --> Gate{"Gate pass?"}
-    Gate -->|no| Profile["Profile misses"]
+    Gate -->|no| Profile["Profile misses\n(Step 6)"]
     Profile --> Plan
     Gate -->|yes| Done["Record result"]
 ```
 
 ---
 
-## How the system works
+## What is in this repo
 
-### Delta swaps
+16 scripts with the core research logic, 45 regression tests, architecture docs, and the full research history.
 
-The server does not reload all expert weights on each request. It computes a diff between the current loaded set and the desired set, then only copies in new experts and zeros out removed ones.
-
-| Swap type | Data touched | Time |
-|---|---:|---:|
-| Dense to sparse (first load) | 51.80 GiB | 10.11s |
-| Sparse A to sparse B (delta) | 1.875 GiB | 0.151s |
-| Same set repeated (no-op) | 0 GiB | 0.000s |
-
-### Router masking
-
-After each swap, forward hooks on every MoE gate layer apply `-inf` masks to gate logits for non-resident experts. The router can only select from the loaded active set. The hooks also record which experts the router originally wanted, producing per-request miss statistics.
-
-### Plan structure
-
-A plan describes, per MoE layer: **coreExperts** (always resident), **sliceCatalog** (swappable specialist groups), and a **budget** (VRAM constraints). At request time, the selector unions the core with prompt-conditioned slices to build the active set.
-
-```mermaid
-flowchart TD
-    Prompt["Prompt arrives"] --> Selector["Select specialist slices\nbased on prompt content"]
-    Core["Core experts\n(always resident)"] --> Union["Union: core + slices"]
-    Selector --> Union
-    Union --> Swap["Delta swap to\nmatch active set"]
-    Swap --> Forward["Forward pass"]
-```
-
----
-
-## What this repo contains
-
-16 scripts covering plan building, evaluation, the patched runtime, gating, profiling, and the learned router. Plus 45 regression tests, architecture docs, and the full research history.
-
-### What is NOT included (and why)
-
-The private research repo has ~46 scripts. The 30 excluded scripts are not portable:
-
-| Category | Examples | Why excluded |
-|---|---|---|
-| Remote orchestration | `run_autoresearch_dynamic_smoke.py`, `run_autoresearch_daemon.py` | Hardcoded SSH credentials, private IPs, remote PID management |
-| Infrastructure wiring | `target_controller.py`, `run_experiment_batch.py` | Coupled to specific 8x3090 homelab setup |
-| Internal utilities | `update_experiment_ledger.py`, `build_public_release_tree.py` | Repo maintenance, not research logic |
-| Dead ends | `run_packaging_sweep.py`, `run_composition_packaging_sweep.py` | Approaches that failed, documented in the ledger |
-| Dashboards | `build_research_dashboard.py` | Depends on the full private artifact tree |
-
-The autoresearch loop itself is just the included scripts wired together: generate plan, deploy, evaluate, gate, profile, repeat. The excluded scripts only automate the SSH/restart/PID plumbing for one specific machine.
-
----
-
-## Key scripts
-
-| Script | Purpose |
+| Script | What it does |
 |---|---|
 | `dynamic_reap.py` | Plan generation and request-time active-set construction |
 | `evaluate_original_vs_multiplex.py` | Matched BF16-vs-dynamic evaluator |
-| `vllm_multiplex_server.py` | Patched vLLM runtime with expert swapping |
-| `research_gate.py` | Automatic pass/fail gate |
+| `vllm_multiplex_server.py` | Patched vLLM runtime with delta swaps and router masks |
+| `research_gate.py` | Automatic pass/fail gating |
 | `profile_router_activity.py` | Post-hoc router activity profiling |
 | `build_profiled_floor_plan.py` | Profile-derived floor construction |
-| `build_partitioned_reap_plan.py` | Partitioned plan building from observations |
-| `support_router.py` | Learned support-router utilities |
-| `train_support_router.py` | Support-router training (needs scikit-learn: `uv sync --extra train`) |
+| `build_partitioned_reap_plan.py` | Plan building from observation data |
+| `train_support_router.py` | Learned support-router training (`uv sync --extra train`) |
 | `size_estimator.py` | VRAM and BF16 size estimation |
-| `dynamic_swap_delta.py` | Delta-swap diff computation |
-| `multiplex_cache.py` | LRU cartridge cache |
-| `router_activity.py` | Router activity aggregation |
-| `build_support_router_dataset.py` | Support-router training data construction |
-| `personal_activation_corpus.py` | Activation corpus from chat history |
-| `run_budget_oracle_analysis.py` | Budget oracle analysis from traces |
+
+Full list in [scripts/](scripts/).
+
+### What is NOT in this repo
+
+The private repo has ~46 scripts. The 30 excluded ones are not portable -- they contain hardcoded SSH credentials, private IPs, remote PID management, and homelab-specific wiring. The autoresearch loop itself is just the included scripts wired together: generate plan, deploy, evaluate, gate, profile, repeat. The excluded scripts only automate the SSH/restart plumbing for one specific 8x3090 machine.
 
 ---
 
-## Current status in detail
+## Current results
 
-### Best matched result
+### Best live matched result
 
-From the 50-prompt seed-7 evaluation with disagreement-conditioned hybrid reranking:
+50-prompt seed-7 evaluation with disagreement-conditioned hybrid reranking:
 
 | Metric | Value |
 |---|---:|
 | Full BF16 model size | 63.4 GiB |
-| Resident floor | 23.49 GiB |
+| Resident floor | 23.49 GiB (37% of full) |
 | Accuracy | 80.0% |
-| Coherence | 100.0% |
-| Parse error | 0.0% |
 | BF16 answer agreement | 86.0% |
 | BF16 response similarity | 88.56% |
-| Exact match | 68.0% |
 | Avg swap time | 0.669s |
 
-### What has been tried
+### What works
 
-22 experiments at the 20% budget target (12.68 GiB resident). All rejected by the gate. Best was 38% retained accuracy. The failure pattern: at 20%, the selector picks nearly the same experts for every prompt, producing a crippled static submodel.
+- **Routing is concentrated**: 7.6% of experts carry 50% of routing mass
+- **Delta swaps**: 1.875 GiB / 0.151s transitions between active sets
+- **Profiled floors beat heuristics**: 74% holdout accuracy at 23.5 GiB vs 38% from blind selection
+- **Disagreement reranking**: pushed answer agreement from 78% to 86%
 
-Relaxing to 37% (23.49 GiB) with profile-derived floors produced the current best results. Disagreement-conditioned reranking improved answer agreement from 78% to 86%.
+### What does not work
 
-### What is proven
+- **20% resident budget**: 22 experiments, all rejected, best was 38% retained accuracy
+- **Blind heuristic selectors**: pick nearly the same experts for every prompt
+- **Packaging hacks**: benchmark-pure grouping hit 2% accuracy
+- **BF16 parity**: not reached at any budget
 
-- Delta swaps work (sub-second transitions)
-- Dynamic active-set serving works (router masks, miss tracking)
-- Profiled floors beat blind heuristic floors
-- Disagreement reranking improves fidelity
-
-### What is not proven
-
-- BF16 parity
-- Generalization to large holdout sets
-- The 20% resident target
-
----
-
-## Evaluation method
-
-All comparisons run the BF16 baseline and dynamic candidate on the same prompts, same seed, temperature 0.
-
-| Benchmark | Type | Samples |
-|---|---|---:|
-| MMLU | MCQ (A-E) | 10 |
-| ARC Challenge | MCQ (A-E) | 10 |
-| HellaSwag | MCQ (A-E) | 10 |
-| WinoGrande | binary (1/2) | 10 |
-| GSM8K | math (free-form) | 10 |
-
-Metrics: accuracy retained, coherence retained, parse error rate, parsed-answer agreement vs BF16, response similarity vs BF16, swap latency.
+The full experiment ledger with all 22 attempts is in [docs/research_history_20260312.md](docs/research_history_20260312.md).
 
 ---
 
 ## Docs
 
-- [System Technical Report](docs/system_technical_report_20260312.md) -- architecture, runtime, evaluator, findings
-- [Research History](docs/research_history_20260312.md) -- chronological record of all experiments
+- [Blog post](docs/notes/blog.md) -- full narrative of the project
+- [System Technical Report](docs/system_technical_report_20260312.md) -- architecture, runtime, evaluator
+- [Research History](docs/research_history_20260312.md) -- all experiments chronologically
 - [Research Protocol](docs/protocol/research_protocol.md) -- evaluation methodology
 - [Core Architecture](docs/architecture/core_specialist_dynamic_architecture.md) -- core/specialist design
-- [Multiplex Loading](docs/architecture/multiplex_loading_strategy.md) -- loading, swapping, eviction
-- [Multi-turn Protocol](docs/protocol/multi_turn_eval_protocol.md) -- multi-turn evaluation
-- [Blog writeup](docs/notes/blog.md) -- informal narrative of the full project arc
+- [Multiplex Loading](docs/architecture/multiplex_loading_strategy.md) -- swapping and eviction
 - [RESEARCH.md](RESEARCH.md) -- summary
 
 ## License
