@@ -1,0 +1,26 @@
+[project]
+name = "reap-expert-swap"
+version = "0.1.0"
+description = "Research runtime for dynamic expert floors and swaps in sparse MoE serving"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+dependencies = []
+
+[project.optional-dependencies]
+gpu = [
+    "torch>=2.0",
+    "vllm>=0.16",
+]
+train = [
+    "scikit-learn",
+    "scipy",
+    "joblib",
+    "numpy",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests_py"]
