@@ -4,15 +4,19 @@ Dynamic expert-floor construction and runtime swapping for sparse Mixture-of-Exp
 
 This system reduces the resident VRAM footprint of large MoE models (tested on Qwen3.5-35B-A3B) by keeping a profiled expert floor in GPU memory and dynamically materializing prompt-conditioned specialist experts at request time.
 
-## Key results
+## Key results (Qwen3.5-35B-A3B)
 
-| Metric | Value |
-|---|---|
-| Full BF16 model size | ~58 GiB |
-| Profiled floor size | ~23.5 GiB |
-| Swap latency | 0.33s per request |
-| Accuracy retained (in-sample) | 98% |
-| BF16 fidelity (answer agreement) | 100% (5-sample) |
+| Metric | Value | Notes |
+|---|---|---|
+| Full BF16 model size | 63.4 GiB | estimated via size_estimator |
+| Profiled floor size | 23.5 GiB | 62.9% VRAM reduction |
+| Swap latency | 0.33s per request | avg across smoke eval |
+| Accuracy retained (smoke, 5-bench) | 98% | vs dense baseline, same seed |
+| Parsed answer agreement vs BF16 | 100% | 5-sample matched eval |
+| Avg response similarity vs BF16 | 76.75% | verbatim text overlap varies |
+| Full95 coverage by floor | 40.1% | known gap -- active research area |
+
+Caveats: the accuracy and fidelity numbers come from small sample evaluations (5-50 prompts). The 40.1% full95 coverage means the floor only covers ~40% of the experts the full model uses at the 95th-percentile activity threshold. This is the main bottleneck under active research. See [activation-diff analysis](docs/system_technical_report_20260312.md) for details.
 
 ## How it works
 
