@@ -1,0 +1,31 @@
+{
+  "model": "Qwen3.5-35B-A3B",
+  "evaluation_slice": "matched_50_prompt_seed7_single_turn",
+  "best_balanced_run": {
+    "label": "backfill_plus_full_rerank",
+    "resident_gib": 23.885,
+    "raw_accuracy_pct": 84,
+    "retained_accuracy_pct": 98,
+    "bf16_answer_agreement_pct": 86,
+    "bf16_response_similarity_pct": 88.5545,
+    "exact_response_match_pct": 70,
+    "parse_error_pct": 0,
+    "avg_swap_time_s": 0.657313
+  },
+  "best_fidelity_variant": {
+    "label": "backfill_plus_full_rerank_wider_candidates",
+    "resident_gib": 23.885,
+    "raw_accuracy_pct": 84,
+    "retained_accuracy_pct": 98,
+    "bf16_answer_agreement_pct": 86,
+    "bf16_response_similarity_pct": 90.1432,
+    "exact_response_match_pct": 70,
+    "parse_error_pct": 0,
+    "avg_swap_time_s": 0.688659
+  },
+  "notes": [
+    "Targeted backfill added 68 experts and fixed the known GSM8K arithmetic miss.",
+    "Latest best numbers are from the single-turn matched harness.",
+    "BF16 parity is not reached yet."
+  ]
+}

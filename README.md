@@ -2,7 +2,7 @@
 
 Reduce the VRAM footprint of sparse MoE models by keeping a profiled expert floor resident and dynamically swapping in prompt-conditioned specialists at request time.
 
-This is experimental research code. The system works end to end but has not reached BF16 parity. Best live result: **86% parsed-answer agreement** against the BF16 baseline on a matched 50-prompt evaluation. Current testbed: **Qwen3.5-35B-A3B** (63.4 GiB full BF16).
+This is experimental research code. The system works end to end but has not reached BF16 parity. Current best balanced live result: **84% raw accuracy**, **98% retained accuracy**, and **86% BF16 parsed-answer agreement** at **23.89 GiB resident** on a matched 50-prompt evaluation. Current testbed: **Qwen3.5-35B-A3B** (63.4 GiB full BF16).
 
 For the full narrative of what was tried, what failed, and why, read [the blog post](docs/notes/blog.md).
 
@@ -203,18 +203,26 @@ The private repo has ~46 scripts. The 30 excluded ones are not portable -- they 
 
 ## Current results
 
-### Best live matched result
+### Best current balanced result
 
-50-prompt seed-7 evaluation with disagreement-conditioned hybrid reranking:
+50-prompt seed-7 evaluation with **targeted backfill (+68 experts)** plus **full disagreement-conditioned reranking**:
 
 | Metric | Value |
 |---|---:|
 | Full BF16 model size | 63.4 GiB |
-| Resident floor | 23.49 GiB (37% of full) |
-| Accuracy | 80.0% |
+| Resident footprint | 23.89 GiB |
+| Raw accuracy | 84.0% |
+| Retained accuracy | 98.0% |
 | BF16 answer agreement | 86.0% |
-| BF16 response similarity | 88.56% |
-| Avg swap time | 0.669s |
+| BF16 response similarity | 88.55% |
+| Exact response match | 70.0% |
+| Avg swap time | 0.657s |
+
+This run fixed the known GSM8K arithmetic miss (`348` vs `358`) while keeping ARC / HellaSwag / MMLU / WinoGrande in the 89-100% retained band. See `artifacts/summaries/latest-results-2026-03-12.md` for the current top-run breakdown.
+
+### Best fidelity variant
+
+A wider-candidate variant kept the same 84% raw accuracy and 86% BF16 answer agreement while improving average BF16 response similarity to **90.14%**, at the cost of slower average sample time.
 
 ### What works
 
