@@ -8,6 +8,12 @@ import time
 from typing import Any
 
 import torch
+from compact_offload import (
+    build_compact_expert_map,
+    normalize_dense_local_to_global,
+    resolve_compact_indices,
+    summarize_compact_delta,
+)
 from dynamic_swap_delta import build_dense_keep_sets, compute_keep_set_delta
 from multiplex_cache import update_loaded_cartridge_order
 from router_activity import (
@@ -25,6 +31,9 @@ original_build_app = api_server.build_app
 loaded_cartridges: list[str] = []
 MAX_LOADED_CARTRIDGES = int(os.environ.get("REAP_MAX_LOADED_CARTRIDGES", "4"))
 ENABLE_ROUTER_MASKS = os.environ.get("REAP_ENABLE_ROUTER_MASKS", "1") != "0"
+ENABLE_COMPACT_ACTIVE_EXPERTS = (
+    os.environ.get("REAP_COMPACT_ACTIVE_EXPERTS", "1") != "0"
+)
 DYNAMIC_CONCURRENCY_MODE = "serialized_single_flight"
 
 
@@ -92,6 +101,45 @@ class MultiplexWorkerExtension:
         if not hasattr(self, "_reap_router_miss_stats"):
             self._reap_router_miss_stats = {}
             self._reap_router_miss_order: list[str] = []
+
+    def _get_base_layer_expert_snapshot(self):
+        snapshot = getattr(self, "_reap_base_layer_expert_snapshot", None)
+        if snapshot is not None:
+            return snapshot
+        snapshot = {}
+        layers = self._resolve_model_layers()
+        if layers is None:
+            self._reap_base_layer_expert_snapshot = snapshot
+            return snapshot
+        local_to_global_by_layer = self._get_layer_local_global_maps()
+        for layer_idx, layer in enumerate(layers):
+            moe = getattr(getattr(layer, "mlp", None), "experts", None)
+            if moe is None or not hasattr(moe, "w13_weight") or not hasattr(moe, "w2_weight"):
+                continue
+            dense_local_count = int(moe.w13_weight.shape[0])
+            dense_local_to_global = normalize_dense_local_to_global(
+                local_to_global_by_layer.get(int(layer_idx), {}),
+                dense_local_count,
+            )
+            snapshot[int(layer_idx)] = {
+                "w13_weight": moe.w13_weight.detach().cpu().clone().pin_memory(),
+                "w2_weight": moe.w2_weight.detach().cpu().clone().pin_memory(),
+                "w13_bias": moe.w13_bias.detach().cpu().clone().pin_memory()
+                if hasattr(moe, "w13_bias")
+                else None,
+                "w2_bias": moe.w2_bias.detach().cpu().clone().pin_memory()
+                if hasattr(moe, "w2_bias")
+                else None,
+                "dense_local_to_global": dense_local_to_global,
+                "global_num_experts": int(
+                    getattr(moe, "global_num_experts", max(dense_local_to_global.values(), default=-1) + 1)
+                ),
+                "logical_num_experts": int(
+                    getattr(moe, "logical_num_experts", max(dense_local_to_global.values(), default=-1) + 1)
+                ),
+            }
+        self._reap_base_layer_expert_snapshot = snapshot
+        return snapshot
 
     def _evict_old_router_stats(self, current_request_id: str | None = None):
         order = getattr(self, "_reap_router_miss_order", [])
@@ -288,6 +336,166 @@ class MultiplexWorkerExtension:
         self._reap_local_to_global_by_layer = cached
         return cached
 
+    def _compact_active_set_on_gpu(self, layer_keep_sets: dict[int, set[int]]):
+        layers = self._resolve_model_layers()
+        if layers is None:
+            return {
+                "bytes_copied": 0,
+                "bytes_zeroed": 0,
+                "bytes_touched": 0,
+                "zeroed_tensors": 0,
+                "masks_applied": 0,
+                "active_layer_count": 0,
+                "delta": {
+                    "added_expert_total": 0,
+                    "removed_expert_total": 0,
+                    "reused_expert_total": 0,
+                },
+            }
+        base_snapshot = self._get_base_layer_expert_snapshot()
+        if not base_snapshot:
+            return {
+                "bytes_copied": 0,
+                "bytes_zeroed": 0,
+                "bytes_touched": 0,
+                "zeroed_tensors": 0,
+                "masks_applied": 0,
+                "active_layer_count": 0,
+                "delta": {
+                    "added_expert_total": 0,
+                    "removed_expert_total": 0,
+                    "reused_expert_total": 0,
+                },
+            }
+
+        local_to_global_cache = self._get_layer_local_global_maps()
+        bytes_copied = 0
+        bytes_zeroed = 0
+        zero_count = 0
+        delta_totals = {
+            "added_expert_total": 0,
+            "removed_expert_total": 0,
+            "reused_expert_total": 0,
+        }
+        with torch.no_grad():
+            for layer_idx, keep_set in layer_keep_sets.items():
+                if layer_idx >= len(layers):
+                    continue
+                layer = layers[layer_idx]
+                moe = getattr(getattr(layer, "mlp", None), "experts", None)
+                layer_snapshot = base_snapshot.get(int(layer_idx))
+                if moe is None or layer_snapshot is None:
+                    continue
+
+                dense_local_to_global = layer_snapshot["dense_local_to_global"]
+                dense_local_count = len(dense_local_to_global)
+                selected_globals, dense_local_indices = resolve_compact_indices(
+                    dense_local_to_global,
+                    dense_local_count,
+                    keep_set,
+                )
+                if not selected_globals:
+                    raise RuntimeError(f"compact offload produced empty expert set for layer {layer_idx}")
+
+                previous_globals = getattr(moe, "_reap_compact_selected_globals", None)
+                delta = summarize_compact_delta(previous_globals, selected_globals)
+                for key, value in delta.items():
+                    delta_totals[key] += int(value)
+
+                if tuple(selected_globals) == tuple(previous_globals or ()):
+                    local_to_global_cache[int(layer_idx)] = {
+                        int(local_idx): int(global_idx)
+                        for local_idx, global_idx in enumerate(selected_globals)
+                    }
+                    continue
+
+                index_tensor = torch.tensor(dense_local_indices, dtype=torch.long)
+
+                def _slice_to_device(source_cpu: torch.Tensor | None, current_param: torch.nn.Parameter | None):
+                    nonlocal bytes_copied, bytes_zeroed, zero_count
+                    if source_cpu is None or current_param is None:
+                        return None
+                    old_bytes = current_param.numel() * current_param.element_size()
+                    compact_cpu = source_cpu.index_select(0, index_tensor).contiguous()
+                    compact_gpu = compact_cpu.to(device=current_param.device, non_blocking=False)
+                    bytes_copied += compact_gpu.numel() * compact_gpu.element_size()
+                    if old_bytes > compact_gpu.numel() * compact_gpu.element_size():
+                        bytes_zeroed += old_bytes - (compact_gpu.numel() * compact_gpu.element_size())
+                    zero_count += max(0, int(source_cpu.shape[0]) - len(dense_local_indices))
+                    return compact_gpu
+
+                new_w13 = _slice_to_device(layer_snapshot["w13_weight"], getattr(moe, "w13_weight", None))
+                new_w2 = _slice_to_device(layer_snapshot["w2_weight"], getattr(moe, "w2_weight", None))
+                if new_w13 is None or new_w2 is None:
+                    continue
+                moe.w13_weight.data = new_w13
+                moe.w2_weight.data = new_w2
+                if hasattr(moe, "w13_bias"):
+                    new_w13_bias = _slice_to_device(layer_snapshot["w13_bias"], getattr(moe, "w13_bias", None))
+                    if new_w13_bias is not None:
+                        moe.w13_bias.data = new_w13_bias
+                if hasattr(moe, "w2_bias"):
+                    new_w2_bias = _slice_to_device(layer_snapshot["w2_bias"], getattr(moe, "w2_bias", None))
+                    if new_w2_bias is not None:
+                        moe.w2_bias.data = new_w2_bias
+
+                expert_map_values = build_compact_expert_map(
+                    int(layer_snapshot["global_num_experts"]),
+                    selected_globals,
+                )
+                expert_map_tensor = torch.tensor(
+                    expert_map_values,
+                    dtype=torch.int32,
+                    device=new_w13.device,
+                )
+                if "expert_map" in getattr(moe, "_buffers", {}):
+                    moe._buffers["expert_map"] = expert_map_tensor
+                else:
+                    moe.__dict__["expert_map"] = expert_map_tensor
+
+                if "expert_mask" in getattr(moe, "_buffers", {}) or getattr(moe, "expert_mask", None) is not None:
+                    expert_mask = torch.zeros(
+                        (int(layer_snapshot["global_num_experts"]) + getattr(moe, "num_fused_shared_experts", 0) + 1,),
+                        dtype=torch.int32,
+                        device=new_w13.device,
+                    )
+                    expert_mask[-1] = 0
+                    expert_mask[: int(layer_snapshot["global_num_experts"])] = (
+                        expert_map_tensor > -1
+                    ).to(torch.int32)
+                    if getattr(moe, "num_fused_shared_experts", 0):
+                        start = int(layer_snapshot["global_num_experts"])
+                        end = start + int(getattr(moe, "num_fused_shared_experts", 0))
+                        expert_mask[start:end] = 1
+                    if "expert_mask" in getattr(moe, "_buffers", {}):
+                        moe._buffers["expert_mask"] = expert_mask
+                    else:
+                        moe.__dict__["expert_mask"] = expert_mask
+
+                moe.local_num_experts = len(selected_globals)
+                if hasattr(moe, "moe_config"):
+                    moe.moe_config.num_local_experts = len(selected_globals)
+                moe._reap_compact_selected_globals = tuple(selected_globals)
+                local_to_global_cache[int(layer_idx)] = {
+                    int(local_idx): int(global_idx)
+                    for local_idx, global_idx in enumerate(selected_globals)
+                }
+
+        self._reap_local_to_global_by_layer = local_to_global_cache
+        torch.cuda.empty_cache()
+        torch.cuda.synchronize()
+        masks_applied = self._apply_router_masks_and_hooks(layer_keep_sets, request_id=None)
+        return {
+            "bytes_copied": bytes_copied,
+            "bytes_zeroed": bytes_zeroed,
+            "bytes_touched": bytes_copied + bytes_zeroed,
+            "zeroed_tensors": zero_count,
+            "masks_applied": masks_applied,
+            "active_layer_count": len(layer_keep_sets),
+            "delta": delta_totals,
+            "compact_offload": True,
+        }
+
     def multiplex_load_cartridge(self, cartridge_id, plan):
         local_cartridges = getattr(self, "_multiplex_cartridges", {})
         cartridge_masks = getattr(self, "_multiplex_cartridge_masks", {})
@@ -390,6 +598,21 @@ class MultiplexWorkerExtension:
 
     def multiplex_swap_active_set(self, payload: dict[str, Any], plan: dict[str, Any]):
         validated = validate_active_set_payload(payload, plan)
+        if ENABLE_COMPACT_ACTIVE_EXPERTS:
+            layer_keep_sets = self._layer_keep_sets_from_active_set(validated)
+            request_id = str(validated["request_id"])
+            self._ensure_router_tracking()
+            self._evict_old_router_stats(request_id)
+            if request_id not in self._reap_router_miss_stats:
+                self._reap_router_miss_stats[request_id] = {"by_layer": {}}
+                self._reap_router_miss_order.append(request_id)
+            result = self._compact_active_set_on_gpu(layer_keep_sets)
+            self._set_current_keep_sets(layer_keep_sets)
+            return {
+                "rank": getattr(self, "rank", 0),
+                "request_id": request_id,
+                **result,
+            }
         base_snapshot = self._get_base_expert_snapshot()
         layer_keep_sets = self._layer_keep_sets_from_active_set(validated)
         request_id = str(validated["request_id"])
