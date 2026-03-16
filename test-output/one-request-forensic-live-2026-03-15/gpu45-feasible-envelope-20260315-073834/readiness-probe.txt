@@ -1,8 +1,0 @@
-attempt=1 not ready
-attempt=2 not ready
-attempt=3 not ready
-attempt=4 not ready
-attempt=5 not ready
-attempt=6 not ready
-attempt=7 not ready
-attempt=8 not ready

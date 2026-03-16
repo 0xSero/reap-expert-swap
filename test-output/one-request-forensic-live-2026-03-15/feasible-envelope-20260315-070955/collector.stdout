@@ -1,7 +1,0 @@
-{
-  "forensic_bundle": "/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/forensic_bundle.json",
-  "forensic_visual": "/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/forensic_visual.md",
-  "poisoned": false,
-  "crash_classification": "missing_completion_payload",
-  "missing_expected_fields": 10
-}

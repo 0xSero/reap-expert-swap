@@ -1,7 +1,0 @@
-pgrep: only one pattern can be provided
-Try `pgrep --help' for more information.
-kill: usage: kill [-s sigspec | -n signum | -sigspec] pid | jobspec ... or kill -l [sigspec]
-pgrep: only one pattern can be provided
-Try `pgrep --help' for more information.
-kill: usage: kill [-s sigspec | -n signum | -sigspec] pid | jobspec ... or kill -l [sigspec]
-hard_reset_done

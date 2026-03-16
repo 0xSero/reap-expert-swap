@@ -1,6 +1,0 @@
-run_dir=/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955
-plan_local=/Users/sero/ai/reap-expert-swap/test-output/disagreement-backfill-20260312/combined-backfill-fullrerank.plan.json
-baseline_json=/Users/sero/ai/autoresearch/test-output/sequential-tunneled-2026-03-14/20260314-194006/run-6/baseline.json
-remote_repo=/home/ser/reap-expert-swap-reap
-remote_port=8341
-local_port=18341

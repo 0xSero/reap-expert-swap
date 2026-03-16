@@ -1,9 +1,0 @@
-{
-  "eval_rc": 0,
-  "collector_rc": 3,
-  "failure_mode": "poisoned_runtime",
-  "dynamic_json_exists": true,
-  "gate_json_exists": true,
-  "forensic_bundle_exists": true,
-  "forensic_visual_exists": true
-}

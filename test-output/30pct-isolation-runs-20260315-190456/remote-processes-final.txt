@@ -1,3 +1,0 @@
-1275768 /home/ser/reap-expert-swap-vllm016/.venv/bin/python scripts/vllm_multiplex_server.py --model /home/ser/models/Qwen_Qwen3.5-35B-A3B --host 127.0.0.1 --port 8365 --tensor-parallel-size 2 --max-model-len 3072 --max-num-seqs 1 --reasoning-parser qwen3 --cpu-offload-gb 28 --swap-space 32 --gpu-memory-utilization 0.90 --dtype half --enforce-eager --disable-custom-all-reduce --language-model-only --served-model-name qwen35-dynamic-30pct-pair45 --cpu-offload-params experts
-1839481 bash -c pgrep -af '8365|qwen35-dynamic-30pct-pair45|vllm_multiplex_server' || true
-Pseudo-terminal will not be allocated because stdin is not a terminal.

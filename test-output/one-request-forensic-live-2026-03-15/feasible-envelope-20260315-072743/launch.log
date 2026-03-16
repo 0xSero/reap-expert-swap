@@ -1,3 +1,0 @@
-launch_pid:2001856
-pgrep: only one pattern can be provided
-Try `pgrep --help' for more information.

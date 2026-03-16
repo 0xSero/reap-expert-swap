@@ -1,7 +1,0 @@
-{
-  "service": "pair01-isolation",
-  "host": "127.0.0.1",
-  "port": 18361,
-  "plan_file": "/Users/sero/ai/autoresearch/assets/strict30-v2-plan.json",
-  "plan_mode": "dynamic_core_specialist"
-}
