@@ -1,0 +1,167 @@
++ date -u +start_utc=%Y-%m-%dT%H:%M:%SZ
++ tee /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/start.txt
+start_utc=2026-03-15T11:09:55Z
++ printf '%s\n' run_dir=/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955 plan_local=/Users/sero/ai/reap-expert-swap/test-output/disagreement-backfill-20260312/combined-backfill-fullrerank.plan.json baseline_json=/Users/sero/ai/autoresearch/test-output/sequential-tunneled-2026-03-14/20260314-194006/run-6/baseline.json remote_repo=/home/ser/reap-expert-swap-reap remote_port=8341 local_port=18341
++ echo '# envelope: CUDA_VISIBLE_DEVICES=2,3 TP=2 max-model-len=3072 max-num-seqs=1 qwen3 cpu-offload-gb=28 swap-space=32 gmu=0.90'
++ cat /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/context.txt
++ shasum -a 256 /Users/sero/ai/reap-expert-swap/test-output/disagreement-backfill-20260312/combined-backfill-fullrerank.plan.json
++ tee /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/plan_sha_local.txt
+42084b13449fb87ac2f083613f9e9025380f9d74a29d77360fbce23cba047df1  /Users/sero/ai/reap-expert-swap/test-output/disagreement-backfill-20260312/combined-backfill-fullrerank.plan.json
++ scp -q /Users/sero/ai/reap-expert-swap/test-output/disagreement-backfill-20260312/combined-backfill-fullrerank.plan.json ser@192.168.1.70:/tmp/forensic-feasible-feasible-envelope-20260315-070955.plan.json
++ ssh ser@192.168.1.70 'sha256sum '\''/tmp/forensic-feasible-feasible-envelope-20260315-070955.plan.json'\'''
++ tee /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/plan_sha_remote.txt
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+42084b13449fb87ac2f083613f9e9025380f9d74a29d77360fbce23cba047df1  /tmp/forensic-feasible-feasible-envelope-20260315-070955.plan.json
++ ssh ser@192.168.1.70 'bash -lc '\''pgrep -af "vllm_multiplex_server.py.*--port 8341" || true'\'''
++ tee /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/preexisting-port-check.txt
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+924803 bash -lc pgrep -af "vllm_multiplex_server.py.*--port 8341" || true
++ ssh ser@192.168.1.70 'bash -lc '\''set -euo pipefail; cd /home/ser/reap-expert-swap-reap; rm -f /tmp/forensic-feasible-feasible-envelope-20260315-070955.log /tmp/forensic-feasible-feasible-envelope-20260315-070955.pid; nohup env REAP_PLAN_FILE=/tmp/forensic-feasible-feasible-envelope-20260315-070955.plan.json CUDA_VISIBLE_DEVICES=2,3 /home/ser/reap-expert-swap-vllm016/.venv/bin/python scripts/vllm_multiplex_server.py --model /home/ser/models/Qwen_Qwen3.5-35B-A3B --host 127.0.0.1 --port 8341 --tensor-parallel-size 2 --max-model-len 3072 --max-num-seqs 1 --reasoning-parser qwen3 --cpu-offload-gb 28 --swap-space 32 --gpu-memory-utilization 0.90 --dtype half --enforce-eager --disable-custom-all-reduce --language-model-only --served-model-name qwen35-multiplex-offload-2gpu-3k --cpu-offload-params experts > /tmp/forensic-feasible-feasible-envelope-20260315-070955.log 2>&1 & echo $! > /tmp/forensic-feasible-feasible-envelope-20260315-070955.pid; echo launch_pid:$(cat /tmp/forensic-feasible-feasible-envelope-20260315-070955.pid); pgrep -af "vllm_multiplex_server.py.*--port 8341" || true'\'''
++ tee /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/launch.log
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+launch_pid:928235
+926611 bash -lc set -euo pipefail; cd /home/ser/reap-expert-swap-reap; rm -f /tmp/forensic-feasible-feasible-envelope-20260315-070955.log /tmp/forensic-feasible-feasible-envelope-20260315-070955.pid; nohup env REAP_PLAN_FILE=/tmp/forensic-feasible-feasible-envelope-20260315-070955.plan.json CUDA_VISIBLE_DEVICES=2,3 /home/ser/reap-expert-swap-vllm016/.venv/bin/python scripts/vllm_multiplex_server.py --model /home/ser/models/Qwen_Qwen3.5-35B-A3B --host 127.0.0.1 --port 8341 --tensor-parallel-size 2 --max-model-len 3072 --max-num-seqs 1 --reasoning-parser qwen3 --cpu-offload-gb 28 --swap-space 32 --gpu-memory-utilization 0.90 --dtype half --enforce-eager --disable-custom-all-reduce --language-model-only --served-model-name qwen35-multiplex-offload-2gpu-3k --cpu-offload-params experts > /tmp/forensic-feasible-feasible-envelope-20260315-070955.log 2>&1 & echo $! > /tmp/forensic-feasible-feasible-envelope-20260315-070955.pid; echo launch_pid:$(cat /tmp/forensic-feasible-feasible-envelope-20260315-070955.pid); pgrep -af "vllm_multiplex_server.py.*--port 8341" || true
+928235 /home/ser/reap-expert-swap-vllm016/.venv/bin/python scripts/vllm_multiplex_server.py --model /home/ser/models/Qwen_Qwen3.5-35B-A3B --host 127.0.0.1 --port 8341 --tensor-parallel-size 2 --max-model-len 3072 --max-num-seqs 1 --reasoning-parser qwen3 --cpu-offload-gb 28 --swap-space 32 --gpu-memory-utilization 0.90 --dtype half --enforce-eager --disable-custom-all-reduce --language-model-only --served-model-name qwen35-multiplex-offload-2gpu-3k --cpu-offload-params experts
++ pkill -f 'ssh -f -N -L 18341:127.0.0.1:8341 ser@192.168.1.70'
++ true
++ ssh -f -N -L 18341:127.0.0.1:8341 ser@192.168.1.70
++ printf 'local_tunnel_port=%s\n' 18341
++ ready=0
+++ seq 1 20
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=1 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=2 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=3 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=4 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=5 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=6 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=7 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=8 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=9 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=10 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=11 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=12 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=13 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=14 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=15 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=16 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=17 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=18 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=19 not ready'
++ sleep 15
++ for i in '$(seq 1 20)'
++ curl -fsS http://127.0.0.1:18341/v1/models
++ echo 'attempt=20 not ready'
++ sleep 15
++ '[' 0 -ne 1 ']'
++ echo ready=false
++ '[' 0 -eq 1 ']'
++ python3 -
++ '[' -f /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/dynamic.json ']'
++ echo 4
++ printf 'dynamic.json missing\n'
++ printf '{}'
++ printf '{}\n'
++ printf '# One-Request Forensic Replay Summary\n\nNo dynamic payload generated.\n'
++ '[' -f /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/collector.rc ']'
++ ssh ser@192.168.1.70 'bash -lc '\''echo pid_file:; cat /tmp/forensic-feasible-feasible-envelope-20260315-070955.pid 2>/dev/null || true; echo proc_after_attempt:; pgrep -af "vllm_multiplex_server.py.*--port 8341" || true; echo models_probe:; curl -sS http://127.0.0.1:8341/v1/models || true; echo; echo log_tail:; tail -n 260 /tmp/forensic-feasible-feasible-envelope-20260315-070955.log 2>/dev/null || true'\'''
++ python3 -
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: command substitution: line 122: syntax error near unexpected token `success'
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: command substitution: line 122: `{str(success).lower()}'
+++ '{failure_mode}'
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: line 122: {failure_mode}: command not found
+++ '{ready}'
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: line 122: {ready}: command not found
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: command substitution: line 122: syntax error near unexpected token `results'
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: command substitution: line 122: `{len(results)}'
+++ '{collector_rc}'
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: line 122: {collector_rc}: command not found
+++ '{missing}'
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: line 122: {missing}: command not found
+++ '{crash}'
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: line 122: {crash}: command not found
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: command substitution: line 122: syntax error near unexpected token `'verdict''
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: command substitution: line 122: `{gate.get('verdict') if gate else None}'
+++ '{verdict[plan_sha256_used]}'
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: line 122: {verdict[plan_sha256_used]}: command not found
+++ CUDA_VISIBLE_DEVICES=2,3
+++ tensor-parallel-size=2
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: line 122: tensor-parallel-size=2: command not found
+++ max-model-len=3072
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: line 122: max-model-len=3072: command not found
+++ max-num-seqs=1
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: line 122: max-num-seqs=1: command not found
+++ reasoning-parser=qwen3
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: line 122: reasoning-parser=qwen3: command not found
+++ cpu-offload-gb=28
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: line 122: cpu-offload-gb=28: command not found
+++ swap-space=32
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: line 122: swap-space=32: command not found
+++ gpu-memory-utilization=0.90
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: line 122: gpu-memory-utilization=0.90: command not found
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: command substitution: line 122: syntax error near unexpected token `success'
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: command substitution: line 122: `{str(success).lower()}'
+++ '{failure_mode}'
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: line 122: {failure_mode}: command not found
+++ '{collector_rc}'
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/commands.sh: line 122: {collector_rc}: command not found
++ date -u +end_utc=%Y-%m-%dT%H:%M:%SZ
++ tee /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955/end.txt
+end_utc=2026-03-15T11:15:04Z
++ echo /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/feasible-envelope-20260315-070955

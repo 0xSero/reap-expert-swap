@@ -1,0 +1,8 @@
+{
+  "service": "pair01",
+  "host": "127.0.0.1",
+  "port": 18361,
+  "plan_file": "/Users/sero/ai/reap-expert-swap/test-output/support-set-research-20260311-30pct/best-plan.json",
+  "plan_mode": "dynamic_core_specialist",
+  "plan_budget_bytes": 16757880012
+}

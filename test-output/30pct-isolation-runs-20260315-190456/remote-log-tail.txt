@@ -1,0 +1,57 @@
+(Worker pid=1291797) INFO 03-16 00:05:24 [pynccl.py:111] vLLM is using nccl==2.27.5
+(Worker pid=1291797) WARNING 03-16 00:05:24 [symm_mem.py:67] SymmMemCommunicator: Device capability 8.6 not supported, communicator is not available.
+(Worker pid=1291799) WARNING 03-16 00:05:24 [symm_mem.py:67] SymmMemCommunicator: Device capability 8.6 not supported, communicator is not available.
+(Worker pid=1291799) INFO 03-16 00:05:24 [parallel_state.py:1715] rank 1 in world size 2 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 1, EP rank 1, EPLB rank N/A
+(Worker pid=1291797) INFO 03-16 00:05:24 [parallel_state.py:1715] rank 0 in world size 2 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, EP rank 0, EPLB rank N/A
+(Worker pid=1291797) INFO 03-16 00:05:24 [base.py:106] Offloader set to UVAOffloader
+(Worker pid=1291797) (Worker_TP0 pid=1291797) INFO 03-16 00:05:24 [gpu_model_runner.py:4255] Starting to load model /home/ser/models/Qwen_Qwen3.5-35B-A3B...
+(Worker pid=1291799) INFO 03-16 00:05:24 [base.py:106] Offloader set to UVAOffloader
+(Worker pid=1291797) (Worker_TP0 pid=1291797) INFO 03-16 00:05:25 [cuda.py:453] Using backend AttentionBackendEnum.FLASH_ATTN for vit attention
+(Worker pid=1291797) (Worker_TP0 pid=1291797) INFO 03-16 00:05:25 [mm_encoder_attention.py:215] Using AttentionBackendEnum.FLASH_ATTN for MMEncoderAttention.
+(Worker pid=1291799) (Worker_TP1 pid=1291799) INFO 03-16 00:05:25 [cuda.py:453] Using backend AttentionBackendEnum.FLASH_ATTN for vit attention
+(Worker pid=1291799) (Worker_TP1 pid=1291799) INFO 03-16 00:05:25 [mm_encoder_attention.py:215] Using AttentionBackendEnum.FLASH_ATTN for MMEncoderAttention.
+(Worker pid=1291797) (Worker_TP0 pid=1291797) INFO 03-16 00:05:25 [unquantized.py:186] Using TRITON backend for Unquantized MoE
+(Worker pid=1291797) (Worker_TP0 pid=1291797) INFO 03-16 00:05:28 [cuda.py:405] Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION'].
+(Worker pid=1291797) (Worker_TP0 pid=1291797) INFO 03-16 00:05:28 [flash_attn.py:587] Using FlashAttention version 2
+(Worker pid=1291799) (Worker_TP1 pid=1291799) INFO 03-16 00:06:04 [uva.py:61] Total CPU offloaded parameters: 28.25
+(Worker pid=1291797) (Worker_TP0 pid=1291797) INFO 03-16 00:06:04 [uva.py:61] Total CPU offloaded parameters: 28.25
+(Worker pid=1291797) (Worker_TP0 pid=1291797) 
+Loading safetensors checkpoint shards:   0% Completed | 0/14 [00:00<?, ?it/s]
+(Worker pid=1291797) (Worker_TP0 pid=1291797) 
+Loading safetensors checkpoint shards:   7% Completed | 1/14 [00:01<00:15,  1.23s/it]
+(Worker pid=1291797) (Worker_TP0 pid=1291797) 
+Loading safetensors checkpoint shards:  14% Completed | 2/14 [00:02<00:15,  1.28s/it]
+(Worker pid=1291797) (Worker_TP0 pid=1291797) 
+Loading safetensors checkpoint shards:  21% Completed | 3/14 [00:03<00:14,  1.30s/it]
+(Worker pid=1291797) (Worker_TP0 pid=1291797) 
+Loading safetensors checkpoint shards:  29% Completed | 4/14 [00:05<00:13,  1.34s/it]
+(Worker pid=1291797) (Worker_TP0 pid=1291797) 
+Loading safetensors checkpoint shards:  36% Completed | 5/14 [00:06<00:11,  1.33s/it]
+(Worker pid=1291797) (Worker_TP0 pid=1291797) 
+Loading safetensors checkpoint shards:  43% Completed | 6/14 [00:07<00:10,  1.30s/it]
+(Worker pid=1291797) (Worker_TP0 pid=1291797) 
+Loading safetensors checkpoint shards:  50% Completed | 7/14 [00:09<00:08,  1.28s/it]
+(Worker pid=1291797) (Worker_TP0 pid=1291797) 
+Loading safetensors checkpoint shards:  57% Completed | 8/14 [00:10<00:07,  1.27s/it]
+(Worker pid=1291797) (Worker_TP0 pid=1291797) 
+Loading safetensors checkpoint shards:  64% Completed | 9/14 [00:12<00:07,  1.47s/it]
+(Worker pid=1291797) (Worker_TP0 pid=1291797) 
+Loading safetensors checkpoint shards:  71% Completed | 10/14 [00:13<00:06,  1.50s/it]
+(Worker pid=1291797) (Worker_TP0 pid=1291797) 
+Loading safetensors checkpoint shards:  79% Completed | 11/14 [00:15<00:04,  1.55s/it]
+(Worker pid=1291797) (Worker_TP0 pid=1291797) 
+Loading safetensors checkpoint shards:  86% Completed | 12/14 [00:17<00:03,  1.57s/it]
+(Worker pid=1291797) (Worker_TP0 pid=1291797) 
+Loading safetensors checkpoint shards:  93% Completed | 13/14 [00:18<00:01,  1.50s/it]
+(Worker pid=1291797) (Worker_TP0 pid=1291797) 
+Loading safetensors checkpoint shards: 100% Completed | 14/14 [00:18<00:00,  1.14s/it]
+(Worker pid=1291797) (Worker_TP0 pid=1291797) 
+Loading safetensors checkpoint shards: 100% Completed | 14/14 [00:18<00:00,  1.34s/it]
+(Worker pid=1291797) (Worker_TP0 pid=1291797) 
+(Worker pid=1291797) (Worker_TP0 pid=1291797) INFO 03-16 00:06:23 [default_loader.py:293] Loading weights took 18.71 seconds
+(Worker pid=1291797) (Worker_TP0 pid=1291797) INFO 03-16 00:06:44 [gpu_model_runner.py:4338] Model loading took 4.18 GiB memory and 78.915748 seconds
+(Worker pid=1291797) (Worker_TP0 pid=1291797) WARNING 03-16 00:06:45 [fused_moe.py:1093] Using default MoE config. Performance might be sub-optimal! Config file not found at /home/ser/reap-expert-swap-vllm016/.venv/lib/python3.11/site-packages/vllm/model_executor/layers/fused_moe/configs/E=256,N=256,device_name=NVIDIA_GeForce_RTX_3090.json
+(Worker pid=1291797) (Worker_TP0 pid=1291797) INFO 03-16 00:06:48 [gpu_worker.py:424] Available KV cache memory: 16.7 GiB
+(EngineCore_DP0 pid=1285195) INFO 03-16 00:06:48 [kv_cache_utils.py:1314] GPU KV cache size: 437,184 tokens
+(EngineCore_DP0 pid=1285195) INFO 03-16 00:06:48 [kv_cache_utils.py:1319] Maximum concurrency for 3,072 tokens per request: 276.33x
+Pseudo-terminal will not be allocated because stdin is not a terminal.

@@ -1,0 +1,51 @@
+{
+  "policy": "dynamic_quality_gate",
+  "profile": "dynamic_target",
+  "stage": "dynamic_targeting",
+  "verdict": "invalid",
+  "accepted": false,
+  "valid": false,
+  "reasons": [
+    "baseline comparison is invalid_unmatched_baseline (mismatched: sample_count_per_benchmark, calibration_count_per_benchmark, result_signatures)",
+    "missing runtime readiness evidence"
+  ],
+  "checks": [],
+  "thresholds": {
+    "min_accuracy_retained_pct": 95.0,
+    "min_coherence_retained_pct": 92.0,
+    "min_benchmark_accuracy_retained_pct": 90.0,
+    "min_benchmark_coherence_retained_pct": null,
+    "max_parse_error_rate": 0.04,
+    "max_error_rate": 0.02,
+    "max_p95_sample_time_s": 130.0,
+    "max_avg_swap_time_s": 2.5,
+    "max_quality_loss_pct": 5.0,
+    "max_benchmark_accuracy_drop_abs": 0.1,
+    "max_total_live_footprint_ratio": 0.3,
+    "require_multiple_cartridges": false
+  },
+  "metrics": {
+    "mode": "dynamic",
+    "accuracy": 0.8,
+    "coherence_rate": 1.0,
+    "error_rate": 0.0,
+    "parse_error_rate": 0.0,
+    "avg_sample_time_s": 13.939995,
+    "p95_sample_time_s": 56.199692,
+    "avg_swap_time_s": 8.679007,
+    "swap_count": 5,
+    "unique_cartridges_used": 0,
+    "cartridge_transition_rate": 0.0,
+    "accuracy_retained_pct": 89,
+    "coherence_retained_pct": 100,
+    "quality_loss_pct": 10.0,
+    "worst_benchmark_accuracy_drop_abs": 1.0,
+    "total_live_footprint_ratio": 0.376631,
+    "total_live_footprint_gib": 23.88538
+  },
+  "integrity": null,
+  "actions": {
+    "continue_dynamic_tuning": true,
+    "promote_incumbent": false
+  }
+}

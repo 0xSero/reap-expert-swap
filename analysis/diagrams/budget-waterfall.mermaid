@@ -1,0 +1,31 @@
+%%{init: {'theme': 'dark'}}%%
+graph TD
+    FULL["Full BF16: 63.42 GiB<br/>256 experts × 40 layers = 10,240 total"]
+    CAP["30% Resident Cap: 19.03 GiB"]
+    AR["Always Resident: 3.42 GiB<br/>(attention, embeddings, shared experts,<br/>router weights, layer norms)"]
+    SWAP["Swappable Budget: 15.61 GiB<br/>2,663 expert slots"]
+
+    FULL -->|"× 0.30"| CAP
+    CAP -->|"- always_resident"| SWAP
+
+    subgraph SplitA["Scenario A: 75/25 (Current)"]
+        CA["Core: 11.71 GiB<br/>49 experts/layer"]
+        SA["Specialist: 3.90 GiB<br/>16 experts/layer<br/>= 2 slices of 8"]
+    end
+
+    subgraph SplitB["Scenario B: 35/65 (Default)"]
+        CB["Core: 5.46 GiB<br/>23 experts/layer"]
+        SB["Specialist: 10.14 GiB<br/>43 experts/layer<br/>= 5.4 slices of 8"]
+    end
+
+    subgraph SplitC["Scenario C: 50/50 (Proposed)"]
+        CC["Core: 7.80 GiB<br/>33 experts/layer"]
+        SC["Specialist: 7.80 GiB<br/>33 experts/layer<br/>= 4.1 slices of 8"]
+    end
+
+    SWAP --> CA & SA
+    SWAP --> CB & SB
+    SWAP --> CC & SC
+
+    style SplitA fill:#3a1a1a,stroke:#ff6666
+    style SplitC fill:#1a3a1a,stroke:#66ff66

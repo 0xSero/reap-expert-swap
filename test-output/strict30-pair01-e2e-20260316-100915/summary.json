@@ -1,0 +1,77 @@
+{
+  "out_dir": "test-output/strict30-pair01-e2e-20260316-100915",
+  "arms": {
+    "armA_dynamic_prewarmed": {
+      "label": "A dynamic prewarmed",
+      "accuracy": 0.2,
+      "coherence_rate": 0.56,
+      "avg_sample_time_s": 8.053765,
+      "p95_sample_time_s": 22.815474,
+      "avg_swap_time_s": 0.30324,
+      "avg_cold_swap_time_s": 0.0,
+      "avg_warm_swap_time_s": 0.30324,
+      "avg_router_miss_inactive_ratio": 0.597798,
+      "dynamic_signature_count": 25,
+      "rows_with_same_signature": 0,
+      "rows_with_zero_copy_swap": 0,
+      "rows_with_nonzero_swap_copies": 25,
+      "rows_with_nonzero_swap_adds": 25,
+      "cold_swap_count": 0,
+      "warm_swap_count": 25,
+      "gate_verdict": null,
+      "gate_reasons": null,
+      "warm_start_status": "success",
+      "warm_start_swap_time_s": 59.72016215324402
+    },
+    "armB_forced_static": {
+      "label": "B forced static",
+      "accuracy": 0.24,
+      "coherence_rate": 0.6,
+      "avg_sample_time_s": 2.937906,
+      "p95_sample_time_s": 22.642598,
+      "avg_swap_time_s": 0.062375,
+      "avg_cold_swap_time_s": 0.354367,
+      "avg_warm_swap_time_s": 0.050209,
+      "avg_router_miss_inactive_ratio": 0.024499,
+      "dynamic_signature_count": 1,
+      "rows_with_same_signature": 24,
+      "rows_with_zero_copy_swap": 24,
+      "rows_with_nonzero_swap_copies": 1,
+      "rows_with_nonzero_swap_adds": 1,
+      "cold_swap_count": 1,
+      "warm_swap_count": 24,
+      "gate_verdict": null,
+      "gate_reasons": null,
+      "warm_start_status": null,
+      "warm_start_swap_time_s": null
+    },
+    "armC_cold_included": {
+      "label": "C cold included (fresh relaunch)",
+      "accuracy": 0.2,
+      "coherence_rate": 0.56,
+      "avg_sample_time_s": 5.375457,
+      "p95_sample_time_s": 22.848094,
+      "avg_swap_time_s": 0.311312,
+      "avg_cold_swap_time_s": 0.408084,
+      "avg_warm_swap_time_s": 0.307279,
+      "avg_router_miss_inactive_ratio": 0.597798,
+      "dynamic_signature_count": 25,
+      "rows_with_same_signature": 0,
+      "rows_with_zero_copy_swap": 0,
+      "rows_with_nonzero_swap_copies": 25,
+      "rows_with_nonzero_swap_adds": 25,
+      "cold_swap_count": 1,
+      "warm_swap_count": 24,
+      "gate_verdict": null,
+      "gate_reasons": null,
+      "warm_start_status": null,
+      "warm_start_swap_time_s": null
+    }
+  },
+  "verdict": [
+    "Prewarming isolates the first-shrink tax: warm steady-state swaps are cheap, cold startup is the latency distortion."
+  ],
+  "notes": [
+    "Gate outputs remain invalid if the supplied BF16 baseline artifact does not match the current sample-count/signature set."
+  ]
+}

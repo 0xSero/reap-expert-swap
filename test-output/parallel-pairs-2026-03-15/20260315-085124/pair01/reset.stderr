@@ -1,0 +1,2 @@
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+ControlSocket /Users/sero/.ssh/control-2cd8829a93ce72c23ab129701e94324d850b0fea already exists, disabling multiplexing

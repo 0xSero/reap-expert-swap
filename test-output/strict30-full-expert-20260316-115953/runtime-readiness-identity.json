@@ -1,0 +1,7 @@
+{
+  "service": "full-expert-test",
+  "host": "127.0.0.1",
+  "port": 18362,
+  "plan_file": "assets/strict30-v2-plan.json",
+  "plan_mode": "dynamic_core_specialist"
+}

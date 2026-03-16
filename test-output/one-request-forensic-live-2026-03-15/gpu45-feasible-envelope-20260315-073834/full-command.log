@@ -1,0 +1,80 @@
++zsh:23> date -u '+start_utc=%Y-%m-%dT%H:%M:%SZ'
++zsh:23> tee /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/gpu45-feasible-envelope-20260315-073834/start.txt
+start_utc=2026-03-15T11:38:34Z
++zsh:24> printf '%s\n' 'run_dir=/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/gpu45-feasible-envelope-20260315-073834' 'plan_local=/Users/sero/ai/reap-expert-swap/test-output/disagreement-backfill-20260312/combined-backfill-fullrerank.plan.json' 'baseline_json=/Users/sero/ai/autoresearch/test-output/sequential-tunneled-2026-03-14/20260314-194006/run-6/baseline.json' 'remote_port=8351' 'local_port=18351' 'gpus=4,5'
++zsh:26> pkill -f 'ssh -f -N -L 18351:127.0.0.1:8351 ser@192.168.1.70'
++zsh:26> true
+zsh:27: no matches found: bash -lc 'set -euo pipefail; if [ -f /tmp/forensic-gpu45-gpu45-feasible-envelope-20260315-073834.pid ]; then pid=$(cat /tmp/forensic-gpu45-gpu45-feasible-envelope-20260315-073834.pid || true); [ -n $pid ] && kill $pid 2>/dev/null || true; sleep 1; [ -n $pid ] && kill -9 $pid 2>/dev/null || true; fi; pids=$(pgrep -f vllm_multiplex_server.py.*--port[[:space:]]8351 || true); [ -n $pids ] && kill -9 $pids 2>/dev/null || true; rm -f /tmp/forensic-gpu45-gpu45-feasible-envelope-20260315-073834.pid /tmp/forensic-gpu45-gpu45-feasible-envelope-20260315-073834.log /tmp/forensic-gpu45-gpu45-feasible-envelope-20260315-073834.plan.json; echo reset_ok'
++zsh:27> true
++zsh:29> shasum -a 256 /Users/sero/ai/reap-expert-swap/test-output/disagreement-backfill-20260312/combined-backfill-fullrerank.plan.json
++zsh:29> tee /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/gpu45-feasible-envelope-20260315-073834/plan_sha_local.txt
+42084b13449fb87ac2f083613f9e9025380f9d74a29d77360fbce23cba047df1  /Users/sero/ai/reap-expert-swap/test-output/disagreement-backfill-20260312/combined-backfill-fullrerank.plan.json
++zsh:30> scp -q /Users/sero/ai/reap-expert-swap/test-output/disagreement-backfill-20260312/combined-backfill-fullrerank.plan.json ser@192.168.1.70:/tmp/forensic-gpu45-gpu45-feasible-envelope-20260315-073834.plan.json
++zsh:31> ssh ser@192.168.1.70 'sha256sum '\''/tmp/forensic-gpu45-gpu45-feasible-envelope-20260315-073834.plan.json'\'
++zsh:31> tee /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/gpu45-feasible-envelope-20260315-073834/plan_sha_remote.txt
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+42084b13449fb87ac2f083613f9e9025380f9d74a29d77360fbce23cba047df1  /tmp/forensic-gpu45-gpu45-feasible-envelope-20260315-073834.plan.json
++zsh:33> ssh ser@192.168.1.70 'bash -lc '\''set -euo pipefail; cd /home/ser/reap-expert-swap-reap; nohup env REAP_PLAN_FILE=/tmp/forensic-gpu45-gpu45-feasible-envelope-20260315-073834.plan.json CUDA_VISIBLE_DEVICES=4,5 /home/ser/reap-expert-swap-vllm016/.venv/bin/python scripts/vllm_multiplex_server.py --model /home/ser/models/Qwen_Qwen3.5-35B-A3B --host 127.0.0.1 --port 8351 --tensor-parallel-size 2 --max-model-len 3072 --max-num-seqs 1 --reasoning-parser qwen3 --cpu-offload-gb 28 --swap-space 32 --gpu-memory-utilization 0.90 --dtype half --enforce-eager --disable-custom-all-reduce --language-model-only --served-model-name qwen35-multiplex-offload-2gpu-3k --cpu-offload-params experts > /tmp/forensic-gpu45-gpu45-feasible-envelope-20260315-073834.log 2>&1 & echo $! > /tmp/forensic-gpu45-gpu45-feasible-envelope-20260315-073834.pid; echo launch_pid:$(cat /tmp/forensic-gpu45-gpu45-feasible-envelope-20260315-073834.pid)'\'
++zsh:33> tee /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/gpu45-feasible-envelope-20260315-073834/launch.log
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+launch_pid:2643988
++zsh:35> ssh -f -N -L 18351:127.0.0.1:8351 ser@192.168.1.70
++zsh:36> printf 'local_tunnel_port=%s\n' 18351
++zsh:38> ready=0 
++zsh:39> seq 1 20
++zsh:39> i=1
++zsh:40> curl -fsS http://127.0.0.1:18351/v1/models
++zsh:45> echo 'attempt=1 not ready'
++zsh:46> sleep 15
++zsh:39> i=2
++zsh:40> curl -fsS http://127.0.0.1:18351/v1/models
++zsh:45> echo 'attempt=2 not ready'
++zsh:46> sleep 15
++zsh:39> i=3
++zsh:40> curl -fsS http://127.0.0.1:18351/v1/models
++zsh:45> echo 'attempt=3 not ready'
++zsh:46> sleep 15
++zsh:39> i=4
++zsh:40> curl -fsS http://127.0.0.1:18351/v1/models
++zsh:45> echo 'attempt=4 not ready'
++zsh:46> sleep 15
++zsh:39> i=5
++zsh:40> curl -fsS http://127.0.0.1:18351/v1/models
++zsh:45> echo 'attempt=5 not ready'
++zsh:46> sleep 15
++zsh:39> i=6
++zsh:40> curl -fsS http://127.0.0.1:18351/v1/models
++zsh:45> echo 'attempt=6 not ready'
++zsh:46> sleep 15
++zsh:39> i=7
++zsh:40> curl -fsS http://127.0.0.1:18351/v1/models
++zsh:45> echo 'attempt=7 not ready'
++zsh:46> sleep 15
++zsh:39> i=8
++zsh:40> curl -fsS http://127.0.0.1:18351/v1/models
++zsh:45> echo 'attempt=8 not ready'
++zsh:46> sleep 15
++zsh:39> i=9
++zsh:40> curl -fsS http://127.0.0.1:18351/v1/models
++zsh:41> ready=1 
++zsh:42> echo 'ready_attempt=9'
++zsh:43> break
++zsh:48> [ 1 -ne 1 ']'
++zsh:50> [ 1 -eq 1 ']'
++zsh:51> /Users/sero/.local/bin/uv run --with requests --with datasets python /Users/sero/ai/reap-expert-swap/scripts/evaluate_original_vs_multiplex.py --mode dynamic --server-url http://127.0.0.1:18351 --model qwen35-multiplex-offload-2gpu-3k --plan-json /Users/sero/ai/reap-expert-swap/test-output/disagreement-backfill-20260312/combined-backfill-fullrerank.plan.json --sample-count 1 --calibration-count 0 --seed 7 --request-timeout-s 120 --baseline-json /Users/sero/ai/autoresearch/test-output/sequential-tunneled-2026-03-14/20260314-194006/run-6/baseline.json --gate-profile dynamic_target --gate-output-json /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/gpu45-feasible-envelope-20260315-073834/gate.json --gate-output-md /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/gpu45-feasible-envelope-20260315-073834/gate.md --output-json /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/gpu45-feasible-envelope-20260315-073834/dynamic.json --output-md /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/gpu45-feasible-envelope-20260315-073834/dynamic.md
++zsh:69> python3 - /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/gpu45-feasible-envelope-20260315-073834
++zsh:99> [ -f /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/gpu45-feasible-envelope-20260315-073834/dynamic.json ']'
++zsh:100> python3 /Users/sero/ai/autoresearch/one_request_forensic_replay.py --input-dir /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/gpu45-feasible-envelope-20260315-073834 --output-dir /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/gpu45-feasible-envelope-20260315-073834 --strict
++zsh:100> echo 3
++zsh:108> [ -f /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/gpu45-feasible-envelope-20260315-073834/collector.rc ']'
++zsh:110> ssh ser@192.168.1.70 'bash -lc '\''echo pid_file:; cat /tmp/forensic-gpu45-gpu45-feasible-envelope-20260315-073834.pid 2>/dev/null || true; echo proc_after_attempt:; pgrep -af vllm_multiplex_server.py || true; echo models_probe:; curl -sS http://127.0.0.1:8351/v1/models || true; echo; echo log_tail:; tail -n 200 /tmp/forensic-gpu45-gpu45-feasible-envelope-20260315-073834.log 2>/dev/null || true'\'
++zsh:112> python3 - /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/gpu45-feasible-envelope-20260315-073834
+zsh:169: no matches found: bash -lc 'if [ -f /tmp/forensic-gpu45-gpu45-feasible-envelope-20260315-073834.pid ]; then pid=$(cat /tmp/forensic-gpu45-gpu45-feasible-envelope-20260315-073834.pid || true); [ -n $pid ] && kill $pid 2>/dev/null || true; sleep 1; [ -n $pid ] && kill -9 $pid 2>/dev/null || true; fi; pids=$(pgrep -f vllm_multiplex_server.py.*--port[[:space:]]8351 || true); [ -n $pids ] && kill -9 $pids 2>/dev/null || true; pgrep -af vllm_multiplex_server.py || true'
++zsh:169> true
++zsh:170> pkill -f 'ssh -f -N -L 18351:127.0.0.1:8351 ser@192.168.1.70'
++zsh:170> true
++zsh:172> date -u '+end_utc=%Y-%m-%dT%H:%M:%SZ'
++zsh:172> tee /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/gpu45-feasible-envelope-20260315-073834/end.txt
+end_utc=2026-03-15T11:42:10Z
++zsh:173> echo /Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/gpu45-feasible-envelope-20260315-073834
+/Users/sero/ai/autoresearch/test-output/one-request-forensic-live-2026-03-15/gpu45-feasible-envelope-20260315-073834

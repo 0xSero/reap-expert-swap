@@ -1,0 +1,24 @@
+%%{init: {'theme': 'dark'}}%%
+flowchart TD
+    F1["1. rotationPolicy = none<br/><i>No hash-based permutation</i>"]
+    F2["2. supportEstimatorConfig.mode = none<br/><i>Support pathway entirely bypassed</i>"]
+    F3["3. benchmarkMissPriors = empty<br/>tagMissPriors = empty<br/>lexicalMissExemplars = empty<br/><i>No data even if mode were enabled</i>"]
+    F4["4. promptClusterPriors identical<br/>for all domain tags<br/><i>All tags → same global ordering</i>"]
+    F5["5. taskFamilySlicePriors keys<br/>[global, personal] ≠ domain tags<br/>[code, math, writing, ...]<br/><i>Lookup always misses → zero boost</i>"]
+    F6["6. Boost formula monotone<br/>score = AM × (1 + 0.15 × N_tags)<br/><i>Scalar multiple → rank preserved</i>"]
+    F7["7. Budget = exactly 2 slices/layer<br/><i>No slack for reorder impact</i>"]
+
+    EFFECT["base_score ranking ≡ static activationMass ranking<br/>for every prompt, every benchmark"]
+    RESULT["Same top-2 slices selected on all 40 layers<br/>→ 1 signature across all 25 prompts"]
+
+    F1 --> EFFECT
+    F2 --> EFFECT
+    F3 --> F2
+    F4 --> EFFECT
+    F5 --> EFFECT
+    F6 --> EFFECT
+    F7 --> RESULT
+    EFFECT --> RESULT
+
+    style RESULT fill:#6b1a1a,stroke:#ff4444,stroke-width:3px
+    style EFFECT fill:#4a2a0a,stroke:#ff8844,stroke-width:2px

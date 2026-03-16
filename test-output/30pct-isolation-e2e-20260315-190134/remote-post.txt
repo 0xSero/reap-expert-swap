@@ -1,0 +1,208 @@
+pid_file:
+1102301
+proc:
+1102301 bash -c cd '/home/ser/reap-expert-swap-reap' && nohup env REAP_PLAN_FILE='/tmp/30pct-isolation-8361.plan.json' CUDA_VISIBLE_DEVICES='0,1' '/home/ser/reap-expert-swap-vllm016/.venv/bin/python' scripts/vllm_multiplex_server.py --model /home/ser/models/Qwen_Qwen3.5-35B-A3B --host 127.0.0.1 --port 8361 --tensor-parallel-size 2 --max-model-len 3072 --max-num-seqs 1 --reasoning-parser qwen3 --cpu-offload-gb 28 --swap-space 32 --gpu-memory-utilization 0.90 --dtype half --enforce-eager --disable-custom-all-reduce --language-model-only --served-model-name qwen35-dynamic-30pct-pair01 --cpu-offload-params experts > '/tmp/30pct-isolation-8361.log' 2>&1 & echo $! > '/tmp/30pct-isolation-8361.pid'; echo launch_pid:$(cat '/tmp/30pct-isolation-8361.pid')
+1102302 /home/ser/reap-expert-swap-vllm016/.venv/bin/python scripts/vllm_multiplex_server.py --model /home/ser/models/Qwen_Qwen3.5-35B-A3B --host 127.0.0.1 --port 8361 --tensor-parallel-size 2 --max-model-len 3072 --max-num-seqs 1 --reasoning-parser qwen3 --cpu-offload-gb 28 --swap-space 32 --gpu-memory-utilization 0.90 --dtype half --enforce-eager --disable-custom-all-reduce --language-model-only --served-model-name qwen35-dynamic-30pct-pair01 --cpu-offload-params experts
+models:
+{"object":"list","data":[{"id":"qwen35-dynamic-30pct-pair01","object":"model","created":1773616504,"owned_by":"vllm","root":"/home/ser/models/Qwen_Qwen3.5-35B-A3B","parent":null,"max_model_len":3072,"permission":[{"id":"modelperm-982ca3331efbea83","object":"model_permission","created":1773616504,"allow_create_engine":false,"allow_sampling":true,"allow_logprobs":true,"allow_search_indices":false,"allow_view":true,"allow_fine_tuning":false,"organization":"*","group":null,"is_blocking":false}]}]}
+log_tail:
+(APIServer pid=1102302) INFO:     127.0.0.1:59304 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO 03-16 00:10:43 [loggers.py:259] Engine 000: Avg prompt throughput: 24.6 tokens/s, Avg generation throughput: 9.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO 03-16 00:10:53 [loggers.py:259] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.2 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO:     127.0.0.1:59316 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:38588 - "GET /router_misses/12b4f29ea0ebf19c?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:38596 - "GET /forensics/12b4f29ea0ebf19c HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:38610 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:38620 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41220 - "GET /router_misses/3068f44bf988e581?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41232 - "GET /forensics/3068f44bf988e581 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41234 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO 03-16 00:11:03 [loggers.py:259] Engine 000: Avg prompt throughput: 16.1 tokens/s, Avg generation throughput: 10.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO:     127.0.0.1:41242 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41246 - "GET /router_misses/472fdf28c3592f8e?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41254 - "GET /forensics/472fdf28c3592f8e HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41268 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41274 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41290 - "GET /router_misses/0ca99fa03a6de35f?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41302 - "GET /forensics/0ca99fa03a6de35f HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41318 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41324 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41332 - "GET /router_misses/727b897e1a08ab48?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41338 - "GET /forensics/727b897e1a08ab48 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41344 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41360 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41374 - "GET /router_misses/9d40c79c8a98cd0f?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41382 - "GET /forensics/9d40c79c8a98cd0f HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41386 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41396 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41412 - "GET /router_misses/36094a2d77786449?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41428 - "GET /forensics/36094a2d77786449 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41434 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41442 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41456 - "GET /router_misses/3c0d4d54b82d7baf?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41464 - "GET /forensics/3c0d4d54b82d7baf HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:41468 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO 03-16 00:11:13 [loggers.py:259] Engine 000: Avg prompt throughput: 77.6 tokens/s, Avg generation throughput: 7.6 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO 03-16 00:11:23 [loggers.py:259] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.2 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO:     127.0.0.1:41470 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34354 - "GET /router_misses/b3a2a7b52f47a50f?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO 03-16 00:11:33 [loggers.py:259] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.2 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO:     127.0.0.1:34358 - "GET /forensics/b3a2a7b52f47a50f HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34370 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34378 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34382 - "GET /router_misses/a9e871b77c3e0931?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34388 - "GET /forensics/a9e871b77c3e0931 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34400 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34402 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34412 - "GET /router_misses/7edc04729800c068?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34420 - "GET /forensics/7edc04729800c068 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34436 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34444 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34454 - "GET /router_misses/87144cbc5ff2f698?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34466 - "GET /forensics/87144cbc5ff2f698 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34478 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34492 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34508 - "GET /router_misses/06fb396b40e21620?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34510 - "GET /forensics/06fb396b40e21620 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34512 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34516 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34532 - "GET /router_misses/c61f64c31557c9a5?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34544 - "GET /forensics/c61f64c31557c9a5 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34548 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO 03-16 00:11:43 [loggers.py:259] Engine 000: Avg prompt throughput: 109.7 tokens/s, Avg generation throughput: 7.0 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO 03-16 00:11:53 [loggers.py:259] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO:     127.0.0.1:34564 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:48964 - "GET /router_misses/6e01691e1d69bbb3?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:48974 - "GET /forensics/6e01691e1d69bbb3 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:48978 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO 03-16 00:12:03 [loggers.py:259] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 10.7 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO:     127.0.0.1:48990 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:49006 - "GET /router_misses/ce87406a5bd9d305?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:49018 - "GET /forensics/ce87406a5bd9d305 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:49022 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:49024 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:49028 - "GET /router_misses/10f4356fde5d2c67?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:49036 - "GET /forensics/10f4356fde5d2c67 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:49048 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:49056 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:49070 - "GET /router_misses/2dd64578aea841a1?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:49072 - "GET /forensics/2dd64578aea841a1 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO 03-16 00:12:13 [loggers.py:259] Engine 000: Avg prompt throughput: 53.2 tokens/s, Avg generation throughput: 2.2 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO 03-16 00:12:23 [loggers.py:259] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO:     127.0.0.1:51904 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:51906 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:51916 - "GET /router_misses/2440ab84195997ca?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:51918 - "GET /forensics/2440ab84195997ca HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:51920 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:51922 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:60298 - "GET /router_misses/3124d34b90661dca?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:60300 - "GET /forensics/3124d34b90661dca HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:60314 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO 03-16 00:12:33 [loggers.py:259] Engine 000: Avg prompt throughput: 42.2 tokens/s, Avg generation throughput: 2.2 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO:     127.0.0.1:60324 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:60340 - "GET /router_misses/5d2a4cc08feb491e?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:60346 - "GET /forensics/5d2a4cc08feb491e HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:60358 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO 03-16 00:12:43 [loggers.py:259] Engine 000: Avg prompt throughput: 9.0 tokens/s, Avg generation throughput: 10.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO 03-16 00:12:53 [loggers.py:259] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO:     127.0.0.1:60368 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:59462 - "GET /router_misses/f61e659164814c21?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:59466 - "GET /forensics/f61e659164814c21 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:59474 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO 03-16 00:13:03 [loggers.py:259] Engine 000: Avg prompt throughput: 7.7 tokens/s, Avg generation throughput: 10.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO 03-16 00:13:13 [loggers.py:259] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.2 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO:     127.0.0.1:59482 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37082 - "GET /router_misses/092d421fb4060cf6?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37092 - "GET /forensics/092d421fb4060cf6 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37106 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37120 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37122 - "GET /router_misses/f6b2e8bc33f45526?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37124 - "GET /forensics/f6b2e8bc33f45526 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37130 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37144 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:44294 - "GET /router_misses/d5b4ba247b4a2259?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:44296 - "GET /forensics/d5b4ba247b4a2259 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:44312 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO 03-16 00:13:23 [loggers.py:259] Engine 000: Avg prompt throughput: 15.1 tokens/s, Avg generation throughput: 9.8 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO 03-16 00:13:33 [loggers.py:259] Engine 000: Avg prompt throughput: 9.5 tokens/s, Avg generation throughput: 10.9 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO 03-16 00:13:43 [loggers.py:259] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.1 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO:     127.0.0.1:44324 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37422 - "GET /router_misses/12b4f29ea0ebf19c?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37434 - "GET /forensics/12b4f29ea0ebf19c HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37448 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37454 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37458 - "GET /router_misses/3068f44bf988e581?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37466 - "GET /forensics/3068f44bf988e581 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37476 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37492 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37498 - "GET /router_misses/472fdf28c3592f8e?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37508 - "GET /forensics/472fdf28c3592f8e HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37512 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37516 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37526 - "GET /router_misses/0ca99fa03a6de35f?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37540 - "GET /forensics/0ca99fa03a6de35f HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37546 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37556 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37568 - "GET /router_misses/727b897e1a08ab48?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37582 - "GET /forensics/727b897e1a08ab48 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37594 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:37610 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34612 - "GET /router_misses/9d40c79c8a98cd0f?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34614 - "GET /forensics/9d40c79c8a98cd0f HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34618 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO 03-16 00:13:53 [loggers.py:259] Engine 000: Avg prompt throughput: 65.1 tokens/s, Avg generation throughput: 7.5 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO:     127.0.0.1:34632 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34646 - "GET /router_misses/36094a2d77786449?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34658 - "GET /forensics/36094a2d77786449 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34664 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34666 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34668 - "GET /router_misses/3c0d4d54b82d7baf?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34676 - "GET /forensics/3c0d4d54b82d7baf HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:34680 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO 03-16 00:14:03 [loggers.py:259] Engine 000: Avg prompt throughput: 28.6 tokens/s, Avg generation throughput: 9.7 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO 03-16 00:14:13 [loggers.py:259] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.2 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO:     127.0.0.1:34692 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:42828 - "GET /router_misses/b3a2a7b52f47a50f?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:42834 - "GET /forensics/b3a2a7b52f47a50f HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:42844 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:42852 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:42860 - "GET /router_misses/a9e871b77c3e0931?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:42870 - "GET /forensics/a9e871b77c3e0931 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:42874 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:42880 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:42882 - "GET /router_misses/7edc04729800c068?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:42886 - "GET /forensics/7edc04729800c068 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:42890 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:42900 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:60872 - "GET /router_misses/87144cbc5ff2f698?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:60888 - "GET /forensics/87144cbc5ff2f698 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:60902 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO 03-16 00:14:23 [loggers.py:259] Engine 000: Avg prompt throughput: 50.1 tokens/s, Avg generation throughput: 8.5 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO:     127.0.0.1:60904 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:60912 - "GET /router_misses/06fb396b40e21620?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:60926 - "GET /forensics/06fb396b40e21620 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:60942 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:60952 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:60954 - "GET /router_misses/c61f64c31557c9a5?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:60968 - "GET /forensics/c61f64c31557c9a5 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:60980 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO 03-16 00:14:33 [loggers.py:259] Engine 000: Avg prompt throughput: 59.6 tokens/s, Avg generation throughput: 9.9 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO 03-16 00:14:43 [loggers.py:259] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO:     127.0.0.1:60986 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:54252 - "GET /router_misses/6e01691e1d69bbb3?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:54264 - "GET /forensics/6e01691e1d69bbb3 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:54278 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:54280 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:54288 - "GET /router_misses/ce87406a5bd9d305?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:54294 - "GET /forensics/ce87406a5bd9d305 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:54304 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:54308 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:54314 - "GET /router_misses/10f4356fde5d2c67?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:54322 - "GET /forensics/10f4356fde5d2c67 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:54324 - "POST /swap_active_set HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:54328 - "POST /v1/completions HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:33890 - "GET /router_misses/2dd64578aea841a1?reset=true HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO:     127.0.0.1:33904 - "GET /forensics/2dd64578aea841a1 HTTP/1.1" 200 OK
+(APIServer pid=1102302) INFO 03-16 00:14:53 [loggers.py:259] Engine 000: Avg prompt throughput: 53.2 tokens/s, Avg generation throughput: 7.9 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO 03-16 00:15:03 [loggers.py:259] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+(APIServer pid=1102302) INFO:     127.0.0.1:57110 - "GET /v1/models HTTP/1.1" 200 OK

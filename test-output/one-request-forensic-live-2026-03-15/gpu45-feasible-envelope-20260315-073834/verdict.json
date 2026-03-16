@@ -1,0 +1,20 @@
+{
+  "attempt_policy": "single_bounded_attempt",
+  "success": true,
+  "failure_mode": "none",
+  "ready": true,
+  "dynamic_results": 5,
+  "collector_rc": 0,
+  "forensic_missing_fields": 0,
+  "forensic_crash_classification": "none",
+  "forensic_poison_detected": false,
+  "gate_verdict": "invalid",
+  "gate_reasons": [
+    "baseline comparison is invalid_unmatched_baseline (mismatched: sample_count_per_benchmark, calibration_count_per_benchmark, result_signatures)",
+    "missing runtime readiness evidence"
+  ],
+  "plan_path_used": "/Users/sero/ai/reap-expert-swap/test-output/disagreement-backfill-20260312/combined-backfill-fullrerank.plan.json",
+  "plan_sha256_used": "da29cf4a5b9a49c0fe3182266d9d253f9da62afc16e057219fcbe380d1638f51",
+  "server_url": "http://127.0.0.1:18351",
+  "model": "qwen35-multiplex-offload-2gpu-3k"
+}

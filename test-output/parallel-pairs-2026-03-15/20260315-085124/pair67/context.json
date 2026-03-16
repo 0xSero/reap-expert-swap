@@ -1,0 +1,10 @@
+{
+  "name": "pair67",
+  "gpus": "6,7",
+  "remote_port": 8367,
+  "local_port": 18367,
+  "model_name": "qwen35-dynamic-30pct-pair67",
+  "plan_local": "/Users/sero/ai/reap-expert-swap/test-output/support-set-research-20260311-30pct/best-plan.json",
+  "baseline_json": "/Users/sero/ai/reap-expert-swap/test-output/multi-turn-eval-20260312/baseline/baseline-singleturn-seed7-s1.json",
+  "identity_path": "/Users/sero/ai/autoresearch/test-output/parallel-pairs-2026-03-15/20260315-085124/pair67/runtime-readiness-identity.json"
+}

@@ -1,0 +1,16 @@
+{
+  "attempt_policy": "single_bounded_attempt",
+  "success": false,
+  "failure_mode": "startup_failure",
+  "ready": false,
+  "dynamic_results": 0,
+  "collector_rc": 4,
+  "forensic_missing_fields": 10,
+  "forensic_crash_classification": "missing_completion_payload",
+  "forensic_poison_detected": false,
+  "gate_verdict": null,
+  "plan_path_used": null,
+  "plan_sha256_used": null,
+  "server_url": null,
+  "model": null
+}

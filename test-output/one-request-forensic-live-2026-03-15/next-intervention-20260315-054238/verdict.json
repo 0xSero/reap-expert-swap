@@ -1,0 +1,9 @@
+{
+  "attempt": "one-shot next intervention + strict forensic replay",
+  "run_path": "",
+  "collector_rc": 3,
+  "success": false,
+  "failure_mode": "unknown_failure",
+  "notes": [],
+  "forensic_failure_mode": null
+}

@@ -1,0 +1,56 @@
+[
+  {
+    "attempt": 1,
+    "rc": 56,
+    "stdout": "",
+    "stderr": "curl: (56) Recv failure: Connection reset by peer\n"
+  },
+  {
+    "attempt": 2,
+    "rc": 56,
+    "stdout": "",
+    "stderr": "curl: (56) Recv failure: Connection reset by peer\n"
+  },
+  {
+    "attempt": 3,
+    "rc": 56,
+    "stdout": "",
+    "stderr": "curl: (56) Recv failure: Connection reset by peer\n"
+  },
+  {
+    "attempt": 4,
+    "rc": 56,
+    "stdout": "",
+    "stderr": "curl: (56) Recv failure: Connection reset by peer\n"
+  },
+  {
+    "attempt": 5,
+    "rc": 56,
+    "stdout": "",
+    "stderr": "curl: (56) Recv failure: Connection reset by peer\n"
+  },
+  {
+    "attempt": 6,
+    "rc": 56,
+    "stdout": "",
+    "stderr": "curl: (56) Recv failure: Connection reset by peer\n"
+  },
+  {
+    "attempt": 7,
+    "rc": 56,
+    "stdout": "",
+    "stderr": "curl: (56) Recv failure: Connection reset by peer\n"
+  },
+  {
+    "attempt": 8,
+    "rc": 56,
+    "stdout": "",
+    "stderr": "curl: (56) Recv failure: Connection reset by peer\n"
+  },
+  {
+    "attempt": 9,
+    "rc": 0,
+    "stdout": "{\"object\":\"list\",\"data\":[{\"id\":\"qwen35-dynamic-30pct-pair01\",\"object\":\"model\",\"created\":1773615838,\"owned_by\":\"vllm\",\"root\":\"/home/ser/models/Qwen_Qwen3.5-35B-A3B\",\"parent\":null,\"max_model_len\":3072,\"permission\":[{\"id\":\"modelperm-85cf544659f62159\",\"object\":\"model_permission\",\"created\":1773615838,\"allow_create_engine\":false,\"allow_sampling\":true,\"allow_logprobs\":true,\"allow_search_indices\":false,\"a",
+    "stderr": ""
+  }
+]

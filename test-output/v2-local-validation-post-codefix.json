@@ -1,0 +1,998 @@
+{
+  "primary": {
+    "total_prompts": 25,
+    "unique_signature_count": 25,
+    "signatures": {
+      "0c914cf2d2e02cdd": {
+        "count": 1,
+        "benchmarks": [
+          "mmlu"
+        ],
+        "prompt_ids": [
+          "mmlu::high_school_us_history::78043c7a88efdb6b"
+        ]
+      },
+      "179020152f23ce8a": {
+        "count": 1,
+        "benchmarks": [
+          "mmlu"
+        ],
+        "prompt_ids": [
+          "mmlu::high_school_biology::da945bc086fd50a8"
+        ]
+      },
+      "a4bcfebe7ef832bb": {
+        "count": 1,
+        "benchmarks": [
+          "mmlu"
+        ],
+        "prompt_ids": [
+          "mmlu::professional_law::9ecdf69beb5c0909"
+        ]
+      },
+      "9cb06f2bccaadd53": {
+        "count": 1,
+        "benchmarks": [
+          "mmlu"
+        ],
+        "prompt_ids": [
+          "mmlu::professional_law::b32e24ddf34be094"
+        ]
+      },
+      "4ab6d7d1496aa5cb": {
+        "count": 1,
+        "benchmarks": [
+          "mmlu"
+        ],
+        "prompt_ids": [
+          "mmlu::high_school_psychology::b7ab86e60e01bde4"
+        ]
+      },
+      "ae0b8dd0d320bcf6": {
+        "count": 1,
+        "benchmarks": [
+          "arc_challenge"
+        ],
+        "prompt_ids": [
+          "arc::Mercury_SC_LBS10666"
+        ]
+      },
+      "2f518a225b708174": {
+        "count": 1,
+        "benchmarks": [
+          "arc_challenge"
+        ],
+        "prompt_ids": [
+          "arc::Mercury_7185133"
+        ]
+      },
+      "4b3514fd47113c08": {
+        "count": 1,
+        "benchmarks": [
+          "arc_challenge"
+        ],
+        "prompt_ids": [
+          "arc::Mercury_7097318"
+        ]
+      },
+      "a26ff6205604a17a": {
+        "count": 1,
+        "benchmarks": [
+          "arc_challenge"
+        ],
+        "prompt_ids": [
+          "arc::Mercury_7133648"
+        ]
+      },
+      "a744f0ab081d3509": {
+        "count": 1,
+        "benchmarks": [
+          "arc_challenge"
+        ],
+        "prompt_ids": [
+          "arc::Mercury_7038133"
+        ]
+      },
+      "8884a9c4d588e880": {
+        "count": 1,
+        "benchmarks": [
+          "hellaswag"
+        ],
+        "prompt_ids": [
+          "hellaswag::24952"
+        ]
+      },
+      "2a659352e3d46caa": {
+        "count": 1,
+        "benchmarks": [
+          "hellaswag"
+        ],
+        "prompt_ids": [
+          "hellaswag::4384"
+        ]
+      },
+      "668583c917acf7c9": {
+        "count": 1,
+        "benchmarks": [
+          "hellaswag"
+        ],
+        "prompt_ids": [
+          "hellaswag::9842"
+        ]
+      },
+      "c5a11e501daf30d1": {
+        "count": 1,
+        "benchmarks": [
+          "hellaswag"
+        ],
+        "prompt_ids": [
+          "hellaswag::45609"
+        ]
+      },
+      "b37d10f780c9d09b": {
+        "count": 1,
+        "benchmarks": [
+          "hellaswag"
+        ],
+        "prompt_ids": [
+          "hellaswag::2735"
+        ]
+      },
+      "7475cca30e69a0ca": {
+        "count": 1,
+        "benchmarks": [
+          "winogrande"
+        ],
+        "prompt_ids": [
+          "winogrande::378822cb7a4c18b9"
+        ]
+      },
+      "5dd7b273566074b9": {
+        "count": 1,
+        "benchmarks": [
+          "winogrande"
+        ],
+        "prompt_ids": [
+          "winogrande::2a2e9b3ef7f38e3b"
+        ]
+      },
+      "642ad65e81c62800": {
+        "count": 1,
+        "benchmarks": [
+          "winogrande"
+        ],
+        "prompt_ids": [
+          "winogrande::6c0a02378dd8e615"
+        ]
+      },
+      "c46bd0d9c379d0e4": {
+        "count": 1,
+        "benchmarks": [
+          "winogrande"
+        ],
+        "prompt_ids": [
+          "winogrande::b229ad295a25c4ea"
+        ]
+      },
+      "920a2c9ac2729eb5": {
+        "count": 1,
+        "benchmarks": [
+          "winogrande"
+        ],
+        "prompt_ids": [
+          "winogrande::ae689fe59c39d3ae"
+        ]
+      },
+      "dc75d4c8e1fb7452": {
+        "count": 1,
+        "benchmarks": [
+          "gsm8k"
+        ],
+        "prompt_ids": [
+          "gsm8k::d3d4ef1085aa3a51"
+        ]
+      },
+      "88f321b35285b691": {
+        "count": 1,
+        "benchmarks": [
+          "gsm8k"
+        ],
+        "prompt_ids": [
+          "gsm8k::4d6a1cbd5ac9b89b"
+        ]
+      },
+      "10612a9da4419aeb": {
+        "count": 1,
+        "benchmarks": [
+          "gsm8k"
+        ],
+        "prompt_ids": [
+          "gsm8k::ba16b653a431e439"
+        ]
+      },
+      "5713c275ed8c9db7": {
+        "count": 1,
+        "benchmarks": [
+          "gsm8k"
+        ],
+        "prompt_ids": [
+          "gsm8k::1ddec3ad4562a490"
+        ]
+      },
+      "2ec4bb37de6390c6": {
+        "count": 1,
+        "benchmarks": [
+          "gsm8k"
+        ],
+        "prompt_ids": [
+          "gsm8k::1b93857f24583356"
+        ]
+      }
+    },
+    "per_benchmark_summary": {
+      "arc_challenge": {
+        "unique_signatures": 5,
+        "tags": [
+          "general",
+          "research"
+        ]
+      },
+      "gsm8k": {
+        "unique_signatures": 5,
+        "tags": [
+          "code",
+          "math",
+          "research"
+        ]
+      },
+      "hellaswag": {
+        "unique_signatures": 5,
+        "tags": [
+          "code",
+          "general",
+          "research",
+          "writing"
+        ]
+      },
+      "mmlu": {
+        "unique_signatures": 5,
+        "tags": [
+          "code",
+          "general",
+          "ops",
+          "research",
+          "writing"
+        ]
+      },
+      "winogrande": {
+        "unique_signatures": 5,
+        "tags": [
+          "code",
+          "general",
+          "writing"
+        ]
+      }
+    },
+    "per_layer_slice_variation": {
+      "layer_0": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_0_slice_00",
+          "layer_0_slice_01"
+        ]
+      },
+      "layer_1": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_1_slice_00",
+          "layer_1_slice_01"
+        ]
+      },
+      "layer_10": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_10_slice_00",
+          "layer_10_slice_01"
+        ]
+      },
+      "layer_11": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_11_slice_00",
+          "layer_11_slice_01"
+        ]
+      },
+      "layer_12": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_12_slice_00",
+          "layer_12_slice_01"
+        ]
+      },
+      "layer_13": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_13_slice_00",
+          "layer_13_slice_01"
+        ]
+      },
+      "layer_14": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_14_slice_00",
+          "layer_14_slice_01"
+        ]
+      },
+      "layer_15": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_15_slice_00",
+          "layer_15_slice_01"
+        ]
+      },
+      "layer_16": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_16_slice_00",
+          "layer_16_slice_01"
+        ]
+      },
+      "layer_17": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_17_slice_00",
+          "layer_17_slice_01"
+        ]
+      },
+      "layer_18": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_18_slice_00",
+          "layer_18_slice_01"
+        ]
+      },
+      "layer_19": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_19_slice_00",
+          "layer_19_slice_01"
+        ]
+      },
+      "layer_2": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_2_slice_00",
+          "layer_2_slice_01"
+        ]
+      },
+      "layer_20": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_20_slice_00",
+          "layer_20_slice_01"
+        ]
+      },
+      "layer_21": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_21_slice_03",
+          "layer_21_slice_00"
+        ]
+      },
+      "layer_22": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_22_slice_00",
+          "layer_22_slice_01"
+        ]
+      },
+      "layer_23": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_23_slice_02",
+          "layer_23_slice_03"
+        ]
+      },
+      "layer_24": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_24_slice_03",
+          "layer_24_slice_00"
+        ]
+      },
+      "layer_25": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_25_slice_00",
+          "layer_25_slice_01"
+        ]
+      },
+      "layer_26": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_26_slice_01",
+          "layer_26_slice_02"
+        ]
+      },
+      "layer_27": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_27_slice_02",
+          "layer_27_slice_03"
+        ]
+      },
+      "layer_28": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_28_slice_03",
+          "layer_28_slice_00"
+        ]
+      },
+      "layer_29": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_29_slice_03",
+          "layer_29_slice_00"
+        ]
+      },
+      "layer_3": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_3_slice_00",
+          "layer_3_slice_01"
+        ]
+      },
+      "layer_30": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_30_slice_03",
+          "layer_30_slice_00"
+        ]
+      },
+      "layer_31": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_31_slice_03",
+          "layer_31_slice_00"
+        ]
+      },
+      "layer_32": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_32_slice_03",
+          "layer_32_slice_00"
+        ]
+      },
+      "layer_33": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_33_slice_00",
+          "layer_33_slice_01"
+        ]
+      },
+      "layer_34": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_34_slice_03",
+          "layer_34_slice_00"
+        ]
+      },
+      "layer_35": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_35_slice_02",
+          "layer_35_slice_03"
+        ]
+      },
+      "layer_36": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_36_slice_02",
+          "layer_36_slice_03"
+        ]
+      },
+      "layer_37": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_37_slice_02",
+          "layer_37_slice_03"
+        ]
+      },
+      "layer_38": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_38_slice_01",
+          "layer_38_slice_02"
+        ]
+      },
+      "layer_39": {
+        "distinct_selections": 4,
+        "most_common": [
+          "layer_39_slice_02",
+          "layer_39_slice_03"
+        ]
+      },
+      "layer_4": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_4_slice_00",
+          "layer_4_slice_01"
+        ]
+      },
+      "layer_5": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_5_slice_00",
+          "layer_5_slice_01"
+        ]
+      },
+      "layer_6": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_6_slice_00",
+          "layer_6_slice_01"
+        ]
+      },
+      "layer_7": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_7_slice_00",
+          "layer_7_slice_01"
+        ]
+      },
+      "layer_8": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_8_slice_00",
+          "layer_8_slice_01"
+        ]
+      },
+      "layer_9": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_9_slice_00",
+          "layer_9_slice_01"
+        ]
+      }
+    },
+    "rotation_stats": {
+      "layers_with_rotation": 20,
+      "layers_without_rotation": 20,
+      "distinct_offsets_per_layer_avg": 4.0
+    },
+    "acceptance": {
+      "signature_diversity": {
+        "pass": true,
+        "value": 25,
+        "threshold": ">1"
+      },
+      "benchmark_groups": {
+        "pass": true,
+        "value": 5,
+        "threshold": ">=2"
+      },
+      "slice_variation": {
+        "pass": true,
+        "value": 20,
+        "threshold": ">0"
+      },
+      "budget_compliance": {
+        "pass": true,
+        "violations": 0
+      },
+      "core_presence": {
+        "pass": true,
+        "missing": 0
+      }
+    },
+    "verdict": "PASS: strict30 plan produces 25 unique signatures",
+    "plan_path": "/Users/sero/ai/autoresearch/assets/strict30-v2-plan.json",
+    "plan_sha256": "c06e2691d56ca2a7",
+    "sample_count": 5,
+    "seed": 7
+  },
+  "compare": {
+    "total_prompts": 25,
+    "unique_signature_count": 1,
+    "signatures": {
+      "6ebe4366c72f4528": {
+        "count": 25,
+        "benchmarks": [
+          "arc_challenge",
+          "gsm8k",
+          "hellaswag",
+          "mmlu",
+          "winogrande"
+        ],
+        "prompt_ids": [
+          "mmlu::high_school_us_history::78043c7a88efdb6b",
+          "mmlu::high_school_biology::da945bc086fd50a8",
+          "mmlu::professional_law::9ecdf69beb5c0909",
+          "mmlu::professional_law::b32e24ddf34be094",
+          "mmlu::high_school_psychology::b7ab86e60e01bde4",
+          "arc::Mercury_SC_LBS10666",
+          "arc::Mercury_7185133",
+          "arc::Mercury_7097318",
+          "arc::Mercury_7133648",
+          "arc::Mercury_7038133",
+          "hellaswag::24952",
+          "hellaswag::4384",
+          "hellaswag::9842",
+          "hellaswag::45609",
+          "hellaswag::2735",
+          "winogrande::378822cb7a4c18b9",
+          "winogrande::2a2e9b3ef7f38e3b",
+          "winogrande::6c0a02378dd8e615",
+          "winogrande::b229ad295a25c4ea",
+          "winogrande::ae689fe59c39d3ae",
+          "gsm8k::d3d4ef1085aa3a51",
+          "gsm8k::4d6a1cbd5ac9b89b",
+          "gsm8k::ba16b653a431e439",
+          "gsm8k::1ddec3ad4562a490",
+          "gsm8k::1b93857f24583356"
+        ]
+      }
+    },
+    "per_benchmark_summary": {
+      "arc_challenge": {
+        "unique_signatures": 1,
+        "tags": [
+          "general",
+          "research"
+        ]
+      },
+      "gsm8k": {
+        "unique_signatures": 1,
+        "tags": [
+          "code",
+          "math",
+          "research"
+        ]
+      },
+      "hellaswag": {
+        "unique_signatures": 1,
+        "tags": [
+          "code",
+          "general",
+          "research",
+          "writing"
+        ]
+      },
+      "mmlu": {
+        "unique_signatures": 1,
+        "tags": [
+          "code",
+          "general",
+          "ops",
+          "research",
+          "writing"
+        ]
+      },
+      "winogrande": {
+        "unique_signatures": 1,
+        "tags": [
+          "code",
+          "general",
+          "writing"
+        ]
+      }
+    },
+    "per_layer_slice_variation": {
+      "layer_0": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_0_slice_00",
+          "layer_0_slice_01"
+        ]
+      },
+      "layer_1": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_1_slice_00",
+          "layer_1_slice_01"
+        ]
+      },
+      "layer_10": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_10_slice_00",
+          "layer_10_slice_01"
+        ]
+      },
+      "layer_11": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_11_slice_00",
+          "layer_11_slice_01"
+        ]
+      },
+      "layer_12": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_12_slice_00",
+          "layer_12_slice_01"
+        ]
+      },
+      "layer_13": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_13_slice_00",
+          "layer_13_slice_01"
+        ]
+      },
+      "layer_14": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_14_slice_00",
+          "layer_14_slice_01"
+        ]
+      },
+      "layer_15": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_15_slice_00",
+          "layer_15_slice_01"
+        ]
+      },
+      "layer_16": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_16_slice_00",
+          "layer_16_slice_01"
+        ]
+      },
+      "layer_17": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_17_slice_00",
+          "layer_17_slice_01"
+        ]
+      },
+      "layer_18": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_18_slice_00",
+          "layer_18_slice_01"
+        ]
+      },
+      "layer_19": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_19_slice_00",
+          "layer_19_slice_01"
+        ]
+      },
+      "layer_2": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_2_slice_00",
+          "layer_2_slice_01"
+        ]
+      },
+      "layer_20": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_20_slice_00",
+          "layer_20_slice_01"
+        ]
+      },
+      "layer_21": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_21_slice_00",
+          "layer_21_slice_01"
+        ]
+      },
+      "layer_22": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_22_slice_00",
+          "layer_22_slice_01"
+        ]
+      },
+      "layer_23": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_23_slice_00",
+          "layer_23_slice_01"
+        ]
+      },
+      "layer_24": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_24_slice_00",
+          "layer_24_slice_01"
+        ]
+      },
+      "layer_25": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_25_slice_00",
+          "layer_25_slice_01"
+        ]
+      },
+      "layer_26": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_26_slice_00",
+          "layer_26_slice_01"
+        ]
+      },
+      "layer_27": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_27_slice_00",
+          "layer_27_slice_01"
+        ]
+      },
+      "layer_28": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_28_slice_00",
+          "layer_28_slice_01"
+        ]
+      },
+      "layer_29": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_29_slice_00",
+          "layer_29_slice_01"
+        ]
+      },
+      "layer_3": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_3_slice_00",
+          "layer_3_slice_01"
+        ]
+      },
+      "layer_30": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_30_slice_00",
+          "layer_30_slice_01"
+        ]
+      },
+      "layer_31": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_31_slice_00",
+          "layer_31_slice_01"
+        ]
+      },
+      "layer_32": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_32_slice_00",
+          "layer_32_slice_01"
+        ]
+      },
+      "layer_33": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_33_slice_00",
+          "layer_33_slice_01"
+        ]
+      },
+      "layer_34": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_34_slice_00",
+          "layer_34_slice_01"
+        ]
+      },
+      "layer_35": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_35_slice_00",
+          "layer_35_slice_01"
+        ]
+      },
+      "layer_36": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_36_slice_00",
+          "layer_36_slice_01"
+        ]
+      },
+      "layer_37": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_37_slice_00",
+          "layer_37_slice_01"
+        ]
+      },
+      "layer_38": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_38_slice_00",
+          "layer_38_slice_01"
+        ]
+      },
+      "layer_39": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_39_slice_00",
+          "layer_39_slice_01"
+        ]
+      },
+      "layer_4": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_4_slice_00",
+          "layer_4_slice_01"
+        ]
+      },
+      "layer_5": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_5_slice_00",
+          "layer_5_slice_01"
+        ]
+      },
+      "layer_6": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_6_slice_00",
+          "layer_6_slice_01"
+        ]
+      },
+      "layer_7": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_7_slice_00",
+          "layer_7_slice_01"
+        ]
+      },
+      "layer_8": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_8_slice_00",
+          "layer_8_slice_01"
+        ]
+      },
+      "layer_9": {
+        "distinct_selections": 1,
+        "most_common": [
+          "layer_9_slice_00",
+          "layer_9_slice_01"
+        ]
+      }
+    },
+    "rotation_stats": {
+      "layers_with_rotation": 0,
+      "layers_without_rotation": 40,
+      "distinct_offsets_per_layer_avg": 0.0
+    },
+    "acceptance": {
+      "signature_diversity": {
+        "pass": false,
+        "value": 1,
+        "threshold": ">1"
+      },
+      "benchmark_groups": {
+        "pass": false,
+        "value": 1,
+        "threshold": ">=2"
+      },
+      "slice_variation": {
+        "pass": false,
+        "value": 0,
+        "threshold": ">0"
+      },
+      "budget_compliance": {
+        "pass": true,
+        "violations": 0
+      },
+      "core_presence": {
+        "pass": true,
+        "missing": 0
+      }
+    },
+    "verdict": "FAIL: acceptance criteria not met (signatures=1)",
+    "plan_path": "/Users/sero/ai/autoresearch/assets/strict30-best-plan.json",
+    "plan_sha256": "11e230e9bdf2090e",
+    "sample_count": 5,
+    "seed": 7
+  }
+}

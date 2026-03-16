@@ -1,0 +1,72 @@
+id,sample_id,benchmark,conversation_id,turn_index,final_turn_for_sample,prompt,baseline_response,dynamic_response,baseline_time_to_response_s,dynamic_time_to_response_s,dynamic_total_latency_s,baseline_accuracy,dynamic_accuracy,coherent,parse_error,baseline_parsed_answer,dynamic_parsed_answer,gold,parsed_answer_agreement,response_similarity_pct,exact_response_match,error
+gsm8k::d3d4ef1085aa3a51,gsm8k::d3d4ef1085aa3a51,gsm8k,,0,True,Ashley's pizza delivery costs $15. What is the total amount that Ashley should give the delivery man if she wants to give a tip that is equal to 1/5 of the amount she ordered?,"
+The tip is 1/5 of the order amount:
+Tip = $15 * (1/5) = $3
+
+The total amount is the order amount plus the tip:
+Total = $15 + $3 = $18
+
+Final answer: 18","
+
+<think>
+The user wants to know the total amount that Ashley should give to the delivery man.
+The delivery cost is $15.
+The tip is equal to 1/5 of the amount she ordered.
+""Amount she ordered"" refers to the delivery cost ($15).
+So, the tip is 1/5 of $15.
+$15 / 5 = $3.
+The total amount she should give is the delivery cost plus the tip.
+Total = $15 + $3 = $18.
+Wait, let me re-read. ""What is the total amount that Ashley should give the delivery man if she wants to give a tip that is equal to 1/5 of the amount she ordered?""
+Usually, a tip is a percentage of the total bill.
+If the bill is $15, and she wants to give a tip equal to 1/5 of the amount, that means the tip amount is $15 * 1/5 = $3.
+So she pays $15 (delivery cost) + $3 (tip) = $18.
+Or does she just pay the tip? ""give the delivery man"" usually means paying the bill",6.740363,37.491889,121.100827,True,True,False,False,18,18,18,True,5.9365,False,
+mmlu::high_school_us_history::78043c7a88efdb6b,mmlu::high_school_us_history::78043c7a88efdb6b,mmlu,,0,True,"This question refers to the following information.
+Let us not, I beseech you sir, deceive ourselves. Sir, we have done everything that could be done, to avert the storm which is now coming on. We have petitioned; we have remonstrated; we have supplicated; we have prostrated ourselves before the throne, and have implored its interposition to arrest the tyrannical hands of the ministry and Parliament. Our petitions have been slighted; our remonstrances have produced additional violence and insult; our supplications have been disregarded; and we have been spurned, with contempt, from the foot of the throne. In vain, after these things, may we indulge the fond hope of peace and reconciliation. There is no longer any room for hope.… It is in vain, sir, to extenuate the matter. Gentlemen may cry, Peace, Peace, but there is no peace. The war is actually begun! The next gale that sweeps from the north will bring to our ears the clash of resounding arms! Our brethren are already in the field! Why stand we here idle? What is it that gentlemen wish? What would they have? Is life so dear, or peace so sweet, as to be purchased at the price of chains and slavery? Forbid it, Almighty God! I know not what course others may take; but as for me, give me liberty or give me death!
+—Patrick Henry, March 23, 1775
+Which of the following nineteenth-century groups most directly saw themselves as following in the tradition of Patrick Henry?","
+
+<think>
+
+</think>
+
+C","
+
+<think>
+
+</think>
+
+D",17.044676,1.33176,1.736264,False,True,True,False,C,D,D,False,94.4444,False,
+winogrande::378822cb7a4c18b9,winogrande::378822cb7a4c18b9,winogrande,,0,True,"Adam loved dogs but Jason was afraid of them, so only _ petted the poodle.", 1,"
+
+<think>
+Thinking Process:
+
+1",0.496016,1.138035,1.4222,True,True,True,False,1,1,1,True,7.1429,False,
+arc::Mercury_SC_LBS10666,arc::Mercury_SC_LBS10666,arc_challenge,,0,True,Plants do not usually need to eat other organisms because plants,"
+
+<think>
+
+</think>
+
+B","
+
+<think>
+
+</think>
+
+C",0.716886,1.353478,1.679753,True,False,True,False,B,C,B,False,94.4444,False,
+hellaswag::24952,hellaswag::24952,hellaswag,,0,True,"[header] How to deal with being a gifted student [title] Stay focused. [step] No matter how many talents, interests, or obligations you have, do not allow yourself to lose focus on your goals. [substeps] Prioritize your goals and decide which are most important and might need the most time considering your long-term objectives.","
+
+<think>
+
+</think>
+
+D","
+
+<think>
+
+</think>
+
+D",0.852403,1.239893,1.597245,True,True,True,False,D,D,D,True,100.0,True,

@@ -1,0 +1,10 @@
+# Verdict
+- success: 
+- failure_mode: 
+- ready: 
+- dynamic_results: 
+- collector_rc: 
+- forensic_missing_fields: 
+- forensic_crash_classification: 
+- gate_verdict: 
+- plan_sha256_used: 

@@ -1,0 +1,11 @@
+{
+  "request_id": "6e01691e1d69bbb3",
+  "plan_identity": {
+    "plan_mode": "dynamic_core_specialist",
+    "plan_path": "/tmp/forensic-gpu45-gpu45-feasible-envelope-20260315-073834.plan.json",
+    "plan_budget_bytes": 26165525811,
+    "swappable_expert_budget_bytes": 26165525811,
+    "max_refreshes_per_request": 1,
+    "plan_sha256": "da29cf4a5b9a49c0fe3182266d9d253f9da62afc16e057219fcbe380d1638f51"
+  }
+}

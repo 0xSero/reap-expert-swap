@@ -1,0 +1,49 @@
+{
+  "lane": "strict30 pair01 three-arm isolation",
+  "eval_only_required_files": [
+    "reap_swap/evaluate_original_vs_multiplex.py",
+    "reap_swap/dynamic_reap.py",
+    "reap_swap/research_gate.py",
+    "reap_swap/size_estimator.py",
+    "test-output/support-set-research-20260311-30pct/best-plan.json (hosted in /Users/sero/ai/reap-expert-swap)"
+  ],
+  "runtime_plus_eval_required_files": [
+    "reap_swap/evaluate_original_vs_multiplex.py",
+    "reap_swap/vllm_multiplex_server.py",
+    "reap_swap/dynamic_reap.py",
+    "reap_swap/research_gate.py",
+    "reap_swap/size_estimator.py",
+    "reap_swap/dynamic_swap_delta.py",
+    "reap_swap/multiplex_cache.py",
+    "test-output/support-set-research-20260311-30pct/best-plan.json (hosted in /Users/sero/ai/reap-expert-swap)"
+  ],
+  "local_import_closure": {
+    "evaluate_original_vs_multiplex.py": [
+      "dynamic_reap.py",
+      "research_gate.py"
+    ],
+    "dynamic_reap.py": [
+      "size_estimator.py"
+    ],
+    "vllm_multiplex_server.py": [
+      "dynamic_swap_delta.py",
+      "multiplex_cache.py",
+      "dynamic_reap.py"
+    ],
+    "research_gate.py": [],
+    "size_estimator.py": [],
+    "dynamic_swap_delta.py": [],
+    "multiplex_cache.py": []
+  },
+  "external_runtime_assumptions": [
+    "remote runtime host: ser@192.168.1.70",
+    "remote vllm env: /home/ser/reap-expert-swap-vllm016/.venv",
+    "remote runtime repo: /home/ser/reap-expert-swap-reap",
+    "server must launch through vllm_multiplex_server.py, not plain vllm serve",
+    "server-side deps: torch, vllm, uvloop",
+    "eval-side deps: requests, datasets",
+    "optional plan-side deps when support-router is enabled: joblib, scipy",
+    "REAP_PLAN_FILE must point at a valid dynamic_core_specialist plan",
+    "evaluator expects /v1/completions, /swap_active_set, /warm_active_set, /router_misses/{request_id}, /forensics/{request_id}"
+  ]
+}

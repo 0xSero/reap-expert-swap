@@ -1,0 +1,40 @@
+%%{init: {'theme': 'dark'}}%%
+graph LR
+    subgraph Offline["Offline (Plan Generation)"]
+        M["Qwen3.5-35B-A3B<br/>256 experts × 40 layers"]
+        OBS["Observer<br/>2048 personal samples"]
+        SUM["Summary JSON<br/>reap + weighted_ean + freq<br/>per expert per layer"]
+        PB["build_dynamic_plan()<br/>dynamic_reap.py:416"]
+        PLAN["strict30-best-plan.json<br/>core:49 + specialist:16/layer<br/>26 slices of 8 experts"]
+        M --> OBS --> SUM --> PB --> PLAN
+    end
+
+    subgraph Runtime["Runtime (Per-Request)"]
+        PROMPT["Incoming Prompt"]
+        TAGS["infer_domain_tags()<br/>keyword matching"]
+        RANK["rank_slice_ids_for_prompt()<br/>dynamic_reap.py:1359"]
+        ASM["assemble_active_set()<br/>select top-2 slices/layer"]
+        PAY["Active Set Payload<br/>65 experts/layer<br/>+ signature hash"]
+        PROMPT --> TAGS --> RANK --> ASM --> PAY
+    end
+
+    subgraph Server["vLLM Multiplex Server"]
+        SWAP["/swap_active_set<br/>delta computation"]
+        ZERO["Zero removed experts<br/>Copy added from CPU"]
+        MASK["Router mask injection<br/>-inf for inactive"]
+        COMP["vLLM completion<br/>top-8 routing within<br/>active set only"]
+        MISS["Router miss tracking<br/>/router_misses/req_id"]
+        PAY --> SWAP --> ZERO --> MASK --> COMP --> MISS
+    end
+
+    subgraph Eval["Evaluation"]
+        BM["5 benchmarks × 5 samples<br/>MMLU, ARC, HellaSwag<br/>Winogrande, GSM8K"]
+        PARSE["parse_prediction()<br/>coherence_pass()"]
+        SIG["Signature tracking<br/>swap phase classification"]
+        SUMM["Three-arm summary<br/>accuracy + dynamics"]
+        BM --> PARSE --> SIG --> SUMM
+    end
+
+    PLAN --> RANK
+    COMP --> PARSE
+    MISS -.->|"decode_refresh<br/>(not wired)"| RANK

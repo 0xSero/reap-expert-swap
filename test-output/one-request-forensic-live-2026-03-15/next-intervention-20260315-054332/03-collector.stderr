@@ -1,0 +1,1 @@
+FAIL-FAST: strict mode with missing expected forensic fields: ['request_id', 'swap_request_id', 'swap_plan_identity', 'plan_sha256', 'active_set_signature', 'union_validation', 'core_presence_summary', 'worker_swap_result', 'router_miss_payload', 'crash_classification']

@@ -1,0 +1,46 @@
+{
+  "label": "baseline",
+  "timestamp": "2026-03-16T13:28:56Z",
+  "gpus": [
+    {
+      "index": 0,
+      "used_mib": 15,
+      "total_mib": 24576
+    },
+    {
+      "index": 1,
+      "used_mib": 15,
+      "total_mib": 24576
+    },
+    {
+      "index": 2,
+      "used_mib": 131,
+      "total_mib": 24576
+    },
+    {
+      "index": 3,
+      "used_mib": 15,
+      "total_mib": 24576
+    },
+    {
+      "index": 4,
+      "used_mib": 15,
+      "total_mib": 24576
+    },
+    {
+      "index": 5,
+      "used_mib": 15,
+      "total_mib": 24576
+    },
+    {
+      "index": 6,
+      "used_mib": 15,
+      "total_mib": 24576
+    },
+    {
+      "index": 7,
+      "used_mib": 64,
+      "total_mib": 24576
+    }
+  ]
+}
