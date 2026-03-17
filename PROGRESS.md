@@ -1,4 +1,4 @@
-# PROGRESS.md - Qwen selective-UVA proof and preload benchmark lane
+# PROGRESS.md - Qwen selective-UVA closure and Kimi pivot
 
 Date: 2026-03-17
 Repo: /Users/sero/ai/autoresearch
@@ -6,7 +6,76 @@ Remote host: ser@192.168.1.70
 
 ## Current objective
 
-Prove that **upfront loading of the best weights for the right workload** is measurably better than stock vLLM UVA on personal calibration prompts, then carry the winning shape back to Kimi.
+Close Qwen with an honest speed/quality conclusion, then carry the winning resident-budget logic back to Kimi.
+
+## Late update: miss-driven hotset controller is not the winner
+
+### Warmup and benchmark artifacts
+- `/home/ser/proof-output/kimi-vllm/qwen-hotset-warm16-1773784456.json`
+- `/home/ser/proof-output/kimi-vllm/qwen-hotset-pinned10-chat-bench-1773784658.json`
+
+### What the hotset run proved
+
+The pinned-base miss-driven hotset controller is materially better than the earlier broken hotset run, but it still does **not** beat the valid static preload winner.
+
+Warmup behavior:
+- bootstrap resident set stayed at stock `24-39`
+- first real hotset refresh added layer `20` while keeping the full stock tail pinned
+- second refresh changed the extra layer to `15`
+- during the 10-prompt benchmark, a third refresh changed the extra layer to `19`
+
+Observed swap accounting:
+- second refresh swap bytes: `3221225472`
+- third refresh swap bytes: `3221225472`
+
+Pinned hotset benchmark summary:
+- **TTFT:** `1.7778632640838623s`
+- **Prefill:** `120.03727298843728 tok/s`
+- **Generation:** `10.712105774048581 tok/s`
+
+Comparison:
+- better than stock control on TTFT (`2.85s -> 1.78s`)
+- only slightly better than stock on prefill (`116.29 -> 120.04 tok/s`)
+- still materially worse than the valid static preload winner (`1.59s`, `133.18 tok/s`)
+- decode/generation speed regressed badly versus both stock and static preload
+
+Quality on the pinned hotset run:
+- no Chinese drift
+- no punctuation-collapse failure
+- but outputs frequently turned into `Thinking Process` / internal reasoning-trace style responses instead of clean answers
+
+So this is **not** a quality-preserving speed win. It is an exploratory negative result.
+
+### Router-miss observability fix
+
+The hotset controller exposed a real metrics bug:
+- `/forensics/{request_id}` contained real `router_miss_summary` / `router_miss_by_layer`
+- `/router_misses/{request_id}` was still returning zeroed aggregates in hotset mode
+
+Live fix now applied on the remote multiplex server:
+- `/home/ser/reap-expert-swap-reap/scripts/vllm_multiplex_server.py`
+
+Current behavior:
+- `/router_misses/{request_id}` falls back to the per-request forensic payload when the worker aggregate is empty in hotset mode
+- verified on live request `182220c9099743129ee67b017f6db1ab`
+- returned:
+  - `inactive_mass_total: 7096.04150875`
+  - `observed_mass_total: 7119.99996412`
+  - `inactive_ratio: 0.99663505`
+  - `inactive_expert_total: 4703`
+
+### Qwen decision
+
+Freeze the Qwen proof on the **static** resident-set result, not the miss-driven hotset path.
+
+Current Qwen winner remains:
+- `1,2,3,4,5,6,24,25,26,27,28,29,30,31,38,39`
+- artifact: `/home/ser/proof-output/kimi-vllm/qwen-personal16_a_10-chat-bench-1773763213.json`
+
+Interpretation:
+- Qwen proved that **better upfront resident-set selection** improves TTFT/prefill
+- Qwen did **not** prove that the current miss-driven hotset controller is better than the best static preload
+- the hotset controller is now useful as an observability/debugging path, not the production proof path
 
 ## Current truth
 
@@ -202,17 +271,14 @@ This is the first preload shape that showed:
 
 ## Next step
 
-Use the 10-prompt result above as the new control point, then do one of:
+Move back to `Kimi-K2.5-PRISM-REAP-530B-A32B` and apply the Qwen lesson directly:
 
-1. test 1-2 neighboring 16-layer sets around `personal16_a`, or
-2. freeze this as the Qwen proof shape and port the same resident-budget logic back to Kimi
+1. use the existing Kimi observation outputs as the input signal
+2. prefer **static or startup resident-budget selection** first, not prompt-by-prompt hotset churn
+3. keep `REAP_SWAP_MASKS_ONLY=1` and `REAP_ENABLE_ROUTER_MASKS=0`
+4. benchmark Kimi for TTFT, prefill, generation, swap bytes, resident budget, router misses, and quality
 
-The result only counts if:
-- resident layer count stays constant
-- swap bytes stay within the resident exchange budget
-- outputs stay coherent enough to compare against stock
-
-The result only counts if:
-- the startup preload actually changes `resident_layers`
-- the server remains healthy through the benchmark
-- TTFT/prefill improvement is measured against the stock artifact above
+The Kimi result only counts if:
+- the server actually loads and serves from vLLM `0.17.0`
+- resident/offloaded behavior is measured from the live server
+- speed gains are paired with acceptable output quality
