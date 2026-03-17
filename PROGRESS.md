@@ -73,6 +73,53 @@ Summary:
 
 This is the current honest baseline to beat.
 
+### Fresh no-op control on the corrected 16-layer stock set
+- `/home/ser/proof-output/kimi-vllm/qwen-stock16_manual-chat-bench-1773762777.json`
+
+What it proved:
+- a **no-op** `debug_uva_prefix_swap` over the full current resident set does **not** corrupt outputs
+- the earlier punctuation-collapse artifacts came from using an **invalid 8-layer target** that silently halved the resident budget, not from the swap hook itself
+
+Summary:
+- **TTFT:** `5.24s`
+- **Prefill:** `58.53 tok/s`
+- **Generation:** `14.24 tok/s`
+
+### 10-prompt apples-to-apples stock control
+- `/home/ser/proof-output/kimi-vllm/qwen-stock16_10-chat-bench-1773763097.json`
+
+Resident set:
+- stock resident layers = `24-39`
+
+Summary on 10 personal-calibration prompts:
+- **TTFT:** `2.85s`
+- **Prefill:** `116.29 tok/s`
+- **Generation:** `14.13 tok/s`
+
+### 10-prompt mixed personal preload winner so far
+- `/home/ser/proof-output/kimi-vllm/qwen-personal16_a_10-chat-bench-1773763213.json`
+
+Resident set after swap:
+- `1,2,3,4,5,6,24,25,26,27,28,29,30,31,38,39`
+- i.e. replace stock layers `32-37` with personal-hot layers `1-6`
+
+Swap accounting:
+- **onloaded:** `12` params
+- **offloaded:** `12` params
+- **bytes_onloaded:** `4831838208`
+- **bytes_offloaded:** `4831838208`
+
+Summary on the same 10 personal-calibration prompts:
+- **TTFT:** `1.59s`
+- **Prefill:** `133.18 tok/s`
+- **Generation:** `13.94 tok/s`
+
+Interpretation:
+- **TTFT improved ~44%** vs the 10-prompt stock control (`2.85s -> 1.59s`)
+- **Prefill improved ~14.5%** (`116.29 -> 133.18 tok/s`)
+- **Generation stayed roughly flat / slightly down** (`14.13 -> 13.94 tok/s`)
+- outputs remained coherent enough to keep testing, but one prompt drifted into Chinese and another showed a minor truncation/typo, so this is a **promising speed result**, not final parity proof
+
 ## Runtime patches now in play on remote
 
 ### vLLM runtime
@@ -118,7 +165,10 @@ did prove the exchange-budget logic works:
 - onloaded second
 - changed resident layers successfully
 
-But it pushed the engine too close to the limit and later debug calls OOMed.
+But the more important later finding is this:
+- those early tests only targeted **8 layers**
+- the real stock resident set on this server is **16 layers** (`24-39`)
+- so the bad punctuation-collapse runs were not valid apples-to-apples comparisons; they cut the resident budget in half
 
 ### Startup preload attempt #1
 The first startup-resident attempt failed because loader-time names were local module names, not fully-qualified names like:
@@ -136,26 +186,31 @@ That is the correct control point for a real preload test.
 
 ## Current active lane
 
-The current run in progress is the **startup hot-preload lane**.
+The current winning lane is now:
 
-Target hot layers currently being tested:
-- `38, 39, 6, 5, 1, 3, 2, 4`
+1. start from the stock 16-layer resident set
+2. preserve the **same resident-layer count**
+3. replace only the least-interesting stock slice with the hottest personal slice
 
-These were chosen from the plan by highest `coreActivationMass`.
+Current best mixed set:
+- `1,2,3,4,5,6,24,25,26,27,28,29,30,31,38,39`
 
-The purpose is simple:
-- start with a hot resident set already loaded
-- benchmark the same personal prompts
-- compare directly against stock UVA
+This is the first preload shape that showed:
+- materially better TTFT
+- materially better prefill
+- no punctuation-collapse failure
 
 ## Next step
 
-Finish the startup hot-preload run, then produce an honest 2-arm comparison:
+Use the 10-prompt result above as the new control point, then do one of:
 
-1. **stock UVA**
-2. **startup hot preload**
+1. test 1-2 neighboring 16-layer sets around `personal16_a`, or
+2. freeze this as the Qwen proof shape and port the same resident-budget logic back to Kimi
 
-on the same personal calibration prompts.
+The result only counts if:
+- resident layer count stays constant
+- swap bytes stay within the resident exchange budget
+- outputs stay coherent enough to compare against stock
 
 The result only counts if:
 - the startup preload actually changes `resident_layers`
